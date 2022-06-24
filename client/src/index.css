@@ -1,0 +1,16 @@
+:root {
+  --primary-color: black;
+  --secondary-color: navy;
+  --third-color: maroon;
+  --fourth-color: cyan;
+  --fifth-color: white;
+  font-family: Verdana;
+  background-color: var(--primary-color);
+  color: var(--fifth-color);
+}
+
+@media only screen and (max-width: 600px) {
+  :root {
+    font-size: 50%;
+  }
+}

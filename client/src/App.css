@@ -1,0 +1,556 @@
+h1 {
+  color: var(--third-color);
+  filter: brightness(1.5);
+  text-shadow: 0 0 .1em var(--secondary-color);
+  text-align: center;
+  font-size: 3vh;
+  width: fit-content;
+  margin: auto;
+}
+
+h2 {
+  color: var(--fourth-color);
+  text-shadow: 0 0 .25em var(--third-color);
+  text-align: center;
+  font-size: 2vh;
+}
+
+div.nav {
+  height: fit-content;
+  text-align: center;
+}
+
+.link,
+.right {
+  text-decoration: none;
+  color: var(--fifth-color);
+  background-color: transparent;
+  border: none;
+  font-size: 1.5vh;
+  position: absolute;
+  top: 0
+}
+
+.link {
+  left: 0;
+}
+
+.right {
+  right: 0;
+}
+
+button.allplayers {
+  float: right;
+  background-color: unset;
+  color: var(--fifth-color);
+  border: unset;
+}
+
+div.view_scrollable {
+  height: 75vh;
+  overflow: scroll;
+  text-align: center;
+}
+
+div.search_wrapper {
+  position: sticky;
+  top: 0;
+  text-align: center;
+  background-color: var(--primary-color);
+  z-index: 3;
+}
+
+.clickable:hover {
+  cursor: pointer;
+}
+
+.left {
+  text-align: left;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.right {
+  text-align: right;
+}
+
+.top {
+  vertical-align: top;
+}
+
+img.thumbnail {
+  width: 3em;
+  height: 3em;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 0 .5em var(--fifth-color);
+  position: relative;
+  z-index: 1;
+}
+
+input[type="text"] {
+  background-color: var(--fourth-color);
+  text-align: center;
+  font-weight: 900;
+  color: var(--third-color);
+  padding: .25em;
+}
+
+input.home_search {
+  font-size: 125%;
+  padding: .5em;
+}
+
+button {
+  background-color: var(--secondary-color);
+  color: var(--third-color);
+  font-weight: 900;
+  border: .15em solid var(--third-color);
+  padding: .25em;
+}
+
+button.active {
+  background-color: var(--third-color);
+}
+
+button.home {
+  font-size: 125%;
+  padding: 0.5em;
+  border-radius: 1em;
+
+}
+
+table.main {
+  background-color: var(--primary-color);
+  border-spacing: 0 .25em;
+  border-radius: 2em;
+  margin: auto;
+  max-width: 1000px;
+  min-width: 250px;
+  padding: .5em;
+  table-layout: fixed;
+  text-shadow: 0 0 .2em var(--third-color);
+  width: 100%;
+  border: 2px solid var(--fourth-color);
+  text-align: center;
+}
+
+tr.hover {
+  background-color: var(--secondary-color);
+}
+
+tr.hover:hover,
+tr.hover.active {
+  background-color: var(--fifth-color);
+  color: var(--secondary-color);
+}
+
+table.secondary {
+  background-color: var(--fifth-color);
+  table-layout: fixed;
+  width: 100%;
+  border-spacing: 0 .25em;
+}
+
+tbody.header2 {
+  color: var(--secondary-color);
+}
+
+tr.hover2 {
+  height: 7em;
+  background-color: var(--primary-color);
+}
+
+tr.hover2:hover,
+tr.hover2.active {
+  background-color: var(--fourth-color);
+  color: var(--third-color);
+}
+
+table.tertiary {
+  background-color: var(--third-color);
+  color: var(--fourth-color);
+  width: 80%;
+  margin: auto;
+  table-layout: fixed;
+}
+
+tr.tertiary {
+  background-color: var(--fourth-color);
+}
+
+table.tertiary caption {
+  background-color: var(--fourth-color);
+}
+
+table.rostercolumn {
+  display: inline-flex;
+  background-color: var(--fourth-color);
+  color: var(--third-color);
+  margin: 1em;
+  border-spacing: 0;
+}
+
+table.rostercolumn>tbody>tr>th {
+  color: var(--secondary-color);
+  font-weight: 500;
+  box-shadow: 0 0 .5em var(--primary-color);
+}
+
+div.nav_container {
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+}
+
+form {
+  display: inline;
+  margin: 1em;
+}
+
+button.nav {
+  background-color: var(--third-color);
+  border: .25em solid var(--secondary-color);
+  border-radius: 1.5em;
+  color: var(--fifth-color);
+  font-size: 100%;
+  font-weight: 900;
+  margin: .5vh;
+  padding: 1vh .5em;
+  font-size: 1em;
+}
+
+button.active {
+  background-color: var(--secondary-color);
+  border: 2px solid var(--fourth-color);
+  color: var(--fourth-color);
+}
+
+.slidercontainer {
+  display: flex;
+  justify-content: center;
+  font-size: 1em;
+  padding: 0.5em;
+}
+
+.slider {
+  margin: 0 1em;
+  border-radius: 2em;
+  background-color: var(--third-color);
+  border: .25em solid var(--fourth-color);
+  width: fit-content;
+}
+
+span.option button {
+  border: none;
+  background: transparent;
+}
+
+span.option button,
+span.selected button {
+  font-size: 1em;
+  padding: 0.5em;
+  color: var(--fifth-color);
+  font-weight: 900;
+}
+
+span.selected button {
+  border-radius: 2em;
+  border: .25em solid var(--fourth-color);
+  background-color: var(--secondary-color);
+  box-shadow: 0 0 1em var(--primary-color);
+}
+
+table.secondary,
+table.tertiary {
+  animation: expand_down 0.5s ease-out;
+}
+
+.slide_up {
+  animation: slide_up 1s ease-out;
+}
+
+.fade_in {
+  animation: fade_in 2s ease-out;
+}
+
+@keyframes fade_in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+    ;
+  }
+}
+
+@keyframes slide_up {
+  from {
+    transform: translateY(100vh);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes expand_down {
+  from {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  to {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+p.record {
+  display: inline-flex;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  background-color: inherit;
+  z-index: 3;
+  outline: .1em dotted var(--fifth-color);
+}
+
+.black {
+  background-color: black;
+  opacity: .95;
+}
+
+tr.hover2:hover em,
+tr.hover2.active em {
+  filter: invert(1);
+}
+
+em {
+  color: var(--fourth-color);
+  font-weight: 900;
+  text-shadow: none;
+}
+
+em.age {
+  font-weight: inherit;
+}
+
+span.checkboxes,
+div.checkboxes {
+  width: fit-content;
+  margin: auto;
+  text-align: center;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  color: currentColor;
+  background-color: var(--third-color);
+  margin: .5em;
+  font: inherit;
+  width: 1.15em;
+  height: 1.15em;
+  border: .05em solid var(--secondary-color);
+  border-radius: .15em;
+  display: grid;
+  place-content: center;
+  box-shadow: inset 0 0 .25em var(--primary-color), 0 0 .25em var(--fifth-color);
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: .65em;
+  height: .65em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--fourth-color);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1.2);
+}
+
+label.script {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: column;
+  margin: .25em 1em;
+  text-shadow: 0 0 .1em var(--third-color);
+}
+
+.updated_value.modified {
+  outline: .5em solid var(--third-color);
+}
+
+.updated_value {
+  border: none;
+  width: 50%;
+}
+
+select {
+  background-color: inherit;
+  color: inherit;
+  font-weight: inherit;
+  width: fit-content;
+  max-width: 100%;
+  font-size: inherit;
+  border: unset;
+  text-align: right;
+}
+
+option {
+  background-color: var(--secondary-color);
+}
+
+th>p {
+  display: inline;
+}
+
+p.image {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  color: var(--fifth-color);
+  font-weight: 900;
+}
+
+tr.hover:hover p.image,
+tr.hover.active p.image {
+  color: var(--secondary-color);
+}
+
+tr.hover2:hover p.image,
+tr.hover2.active p.image {
+  color: var(--third-color);
+}
+
+div.image_container {
+  position: relative;
+}
+
+img.faded {
+  opacity: 0.5;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  top: -.25em;
+  left: 4em;
+  background-color: var(--third-color);
+  color: var(--fourth-color);
+  padding: .25em;
+}
+
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent var(--third-color) transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+div.player_nav {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+div.player_nav>button {
+  font-size: 1em;
+  background-color: inherit;
+  border: none;
+  margin: 1em;
+}
+
+ol.page_numbers {
+  max-width: 1000px;
+  min-width: 250px;
+  width: 100%;
+  overflow-x: scroll;
+  margin: auto;
+  padding: 1em;
+}
+
+ol.page_numbers li {
+  list-style: none;
+  display: inline;
+  padding: 1em;
+}
+
+div.transaction {
+  height: fit-content;
+  max-height: 15em;
+  overflow-y: scroll;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+div.transaction_user {
+  width: fit-content;
+  margin: auto;
+}
+
+p.red,
+p.green {
+  text-align: left;
+  font-size: 85%;
+}
+
+p.red {
+  color: red;
+  text-shadow: none;
+}
+
+tr.hover:hover p.green,
+tr.hover.active p.green {
+  color: green;
+}
+
+p.green {
+  color: greenyellow;
+  text-shadow: none;
+}
+
+li.active {
+  color: var(--fourth-color);
+  font-weight: 900;
+}
+
+tr.hover3:hover {
+  background-color: var(--primary-color);
+  filter: brightness(2);
+  text-shadow: none;
+}
