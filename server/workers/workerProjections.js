@@ -34,7 +34,7 @@ const getProjections = async () => {
         let team = name.pop()
         name = name.join(' ')
         let position = $(element).find("td").eq(1).text().slice(0, 2).trim()
-        let searchName = name.replace('Jr', '').replace('III', '').replace('II', '').replace('IV', '').replace(/[^0-9a-z]/gi, '').toLowerCase()
+        let searchName = name.replace('Jr.', '').replace('III', '').replace('II', '').replace('IV', '').replace(/[^0-9a-z]/gi, '').toLowerCase()
         let fpts = $(element).find("td").last().text()
         projections.push({
             name: name,

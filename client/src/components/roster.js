@@ -86,8 +86,9 @@ const Roster = (props) => {
                                                             </td>
                                                             <td className="left">
                                                                 {
-                                                                    player === '0' ? <span>empty</span> : allPlayers[player].position +
-                                                                        " " + allPlayers[player].full_name + ` ${allPlayers[player].team === null ? 'FA' : allPlayers[player].team}`
+                                                                    player === '0' ? <span>empty</span> :
+                                                                        `${allPlayers[player].position} ${allPlayers[player].full_name}${allPlayers[player].team === null ? ' FA' : ` ${allPlayers[player].team}`}`
+
                                                                 }
                                                             </td>
                                                             <td className="black">

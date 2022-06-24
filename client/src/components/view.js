@@ -3,17 +3,19 @@ import axios from "axios";
 import SliderToggle from './sliderToggle';
 import PlayerInfo from "./playerInfo";
 import Leagues from "./leagues";
+import PlayerShares from "./playerShares";
 
 const View = (props) => {
     const [isLoading_L, setIsLoading_L] = useState(false)
     const [isLoading_T, setIsLoading_T] = useState(false)
+    const [activeTab, setActiveTab] = useState("Leagues");
+    const [filters, setFilters] = useState({ r_d: "All", b_s: "All" });
     const [user, setUser] = useState({});
     const [projections, setProjections] = useState([])
     const [dv, setDv] = useState([]);
     const [leagues, setLeagues] = useState([]);
     const [transactions, setTransactions] = useState([])
-    const [activeTab, setActiveTab] = useState("Leagues");
-    const [filters, setFilters] = useState({ r_d: "All", b_s: "All" });
+
 
     useEffect(() => {
         setUser(props.user)
@@ -159,6 +161,18 @@ const View = (props) => {
                     matchPlayer_DV={matchPlayer_DV}
                     matchPick={matchPick}
                     matchPlayer_Proj={matchPlayer_Proj}
+                />
+            : null
+        }
+
+        {activeTab === 'Players' ?
+            isLoading_L ? <h1>Loading...</h1> :
+                <PlayerShares
+                    leagues={leagues.filter(x => x.isLeagueTypeHidden === false)}
+                    user={user}
+                    matchPlayer_DV={matchPlayer_DV}
+                    matchPlayer_Proj={matchPlayer_Proj}
+                    matchPick={matchPick}
                 />
             : null
         }

@@ -172,7 +172,7 @@ tr.hover2.active {
 table.tertiary {
   background-color: var(--third-color);
   color: var(--fourth-color);
-  width: 80%;
+  width: 100%;
   margin: auto;
   table-layout: fixed;
 }

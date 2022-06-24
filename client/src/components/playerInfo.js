@@ -10,6 +10,7 @@ const PlayerInfo = (props) => {
     const [dynastyvalues, setDynastyvalues] = useState([])
     const [tab, setTab] = useState('Projections')
     const [filters, setFilters] = useState({ positions: [], types: [] })
+    const [page, SetPage] = useState(1)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -18,24 +19,36 @@ const PlayerInfo = (props) => {
                 await axios.get('/projections'),
                 await axios.get('/dynastyvalues')
             ])
-            proj.data.map(player => {
-                if (Object.keys(allPlayers).find(x => allPlayers[x].search_full_name === player.searchName && allPlayers[x].position === player.position)) {
-                    return player.id = Object.keys(allPlayers).find(x => allPlayers[x].search_full_name === player.searchName && allPlayers[x].position === player.position)
-                } else if (Object.keys(allPlayers).find(x => allPlayers[x].search_full_name !== undefined && allPlayers[x].search_full_name.slice(-5, -2) === player.searchName.slice(-5, -2) && allPlayers[x].search_full_name.slice(0, 3) === player.searchName.slice(0, 3))) {
-                    return player.id = Object.keys(allPlayers).find(x => allPlayers[x].search_full_name.slice(-5, -2) === player.searchName.slice(-5, -2) && allPlayers[x].search_full_name.slice(0, 3) === player.searchName.slice(0, 3))
-                }
-            })
-            setProjections(proj.data)
-
-            dv.data.map(player => {
-                if (Object.keys(allPlayers).find(x => allPlayers[x].search_full_name === player.searchName && allPlayers[x].position === player.position)) {
-                    return player.id = Object.keys(allPlayers).find(x => allPlayers[x].search_full_name === player.searchName && allPlayers[x].position === player.position)
-                } else if (Object.keys(allPlayers).find(x => allPlayers[x].search_full_name !== undefined && allPlayers[x].search_full_name.slice(-5, -2) === player.searchName.slice(-5, -2) && allPlayers[x].search_full_name.slice(0, 3) === player.searchName.slice(0, 3))) {
-                    return player.id = Object.keys(allPlayers).find(x => allPlayers[x].search_full_name.slice(-5, -2) === player.searchName.slice(-5, -2) && allPlayers[x].search_full_name.slice(0, 3) === player.searchName.slice(0, 3))
+            let p = Object.keys(allPlayers).filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x].position)).map(player => {
+                const match = proj.data.find(x => x.searchName === allPlayers[player].search_full_name && (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2)))
+                const match2 = proj.data.find(x => allPlayers[player].search_full_name !== undefined && (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2)) &&
+                    x.searchName.slice(-5, -2) === allPlayers[player].search_full_name.slice(-5, -2) &&
+                    x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3))
+                return {
+                    id: player,
+                    searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
+                    value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
+                    updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0
                 }
             })
 
-            setDynastyvalues(dv.data)
+            setProjections(p.sort((a, b) => parseFloat(b.value) - parseFloat(a.value)))
+
+            let d = Object.keys(allPlayers).filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x].position)).map(player => {
+                const match = dv.data.find(x => x.searchName === allPlayers[player].search_full_name && ((allPlayers[player].team === null && x.team === 'FA') || (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2))))
+                const match2 = dv.data.find(x => allPlayers[player].search_full_name !== undefined && ((allPlayers[player].team === null && x.team === 'FA') || (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2))) &&
+                    x.searchName.slice(-5, -2) === allPlayers[player].search_full_name.slice(-5, -2) &&
+                    x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3))
+                return {
+                    id: player,
+                    searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
+                    value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
+                    updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0
+                }
+            })
+            d = [...d, ...dv.data.filter(x => x.position === 'PI')].flat()
+
+            setDynastyvalues(d.sort((a, b) => parseInt(b.value) - parseInt(a.value)))
 
             setIsLoading(false)
         }
@@ -99,6 +112,7 @@ const PlayerInfo = (props) => {
 
     const players = tab === 'Projections' ? projections : dynastyvalues
 
+
     return isLoading ? <h1>Loading...</h1> :
         <>
             <div className="player_nav">
@@ -136,6 +150,13 @@ const PlayerInfo = (props) => {
                     placeholder="Search Players"
                     sendSearched={getSearched}
                 />
+                <ol className="page_numbers">
+                    {Array.from(Array(Math.ceil(players.filter(x => x.isPlayerHidden === false && !filters.types.includes(x.type) && !filters.positions.includes(x.position)).length / 50)).keys()).map(key => key + 1).map(page_number =>
+                        <li className={page === page_number ? 'active clickable' : 'clickable'} key={page_number} onClick={() => SetPage(page_number)}>
+                            {page_number}
+                        </li>
+                    )}
+                </ol>
             </div>
             <div className="view_scrollable">
                 <table className="main">
@@ -150,7 +171,7 @@ const PlayerInfo = (props) => {
                     </tbody>
                     <tbody className="slide_up">
                         {players.filter(x => x.isPlayerHidden === false && !filters.positions.includes(x.position) &&
-                            !filters.types.includes(x.type)).map((player, index) =>
+                            !filters.types.includes(x.type)).slice((page - 1) * 50, ((page - 1) * 50) + 50).map((player, index) =>
                                 <tr className="hover" key={index}>
                                     <td>
                                         <img
@@ -160,9 +181,9 @@ const PlayerInfo = (props) => {
                                             onError={(e) => { return e.target.src = player_default }}
                                         />
                                     </td>
-                                    <td>{player.name}</td>
-                                    <td>{player.position}</td>
-                                    <td>{player.team}</td>
+                                    <td>{allPlayers[player.id] === undefined ? player.name : allPlayers[player.id].full_name}</td>
+                                    <td>{allPlayers[player.id] === undefined ? null : allPlayers[player.id].position}</td>
+                                    <td>{allPlayers[player.id] === undefined ? null : allPlayers[player.id].team}</td>
                                     <td>{player.value}</td>
                                     <td>
                                         <input
