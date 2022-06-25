@@ -10,7 +10,7 @@ import Transactions from "./transactions";
 const View = (props) => {
     const [isLoading_L, setIsLoading_L] = useState(false)
     const [isLoading_T, setIsLoading_T] = useState(false)
-    const [activeTab, setActiveTab] = useState("Leagues");
+    const [activeTab, setActiveTab] = useState("Player Info");
     const [filters, setFilters] = useState({ r_d: "All", b_s: "All" });
     const [user, setUser] = useState({});
     const [projections, setProjections] = useState([])

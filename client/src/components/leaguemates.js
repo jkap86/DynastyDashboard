@@ -5,6 +5,7 @@ import LeaguemateLeagues from "./leaguemateLeagues";
 
 const Leaguemates = (props) => {
     const [leaguemates, setLeaguemates] = useState([])
+    const [page, SetPage] = useState(1)
 
     useEffect(() => {
         const getLeaguemates = (leagues) => {
@@ -68,8 +69,22 @@ const Leaguemates = (props) => {
         setLeaguemates(l.sort((a, b) => b.count - a.count))
     }, [props.leagues])
 
-    const getSearched = (data) => {
-
+    const getSearched = (leaguemate_username) => {
+        let l = leaguemates
+        if (leaguemate_username) {
+            l.map(leaguemate => {
+                return leaguemate.isLeaguemateHidden = true
+            })
+            l.filter(x => x.username === leaguemate_username).map(leaguemate => {
+                return leaguemate.isLeaguemateHidden = false
+            })
+        } else {
+            l.map(leaguemate => {
+                return leaguemate.isLeaguemateHidden = false
+            })
+        }
+        SetPage(1)
+        setLeaguemates([...l])
     }
 
     const showLeagues = (leaguemate) => {
@@ -88,26 +103,33 @@ const Leaguemates = (props) => {
                 sendSearched={getSearched}
                 value={''}
             />
+            <ol className="page_numbers">
+                {Array.from(Array(Math.ceil(leaguemates.filter(x => x.isLeaguemateHidden === false).length / 50)).keys()).map(key => key + 1).map(page_number =>
+                    <li className={page === page_number ? 'active clickable' : 'clickable'} key={page_number} onClick={() => SetPage(page_number)}>
+                        {page_number}
+                    </li>
+                )}
+            </ol>
         </div>
         <div className="view_scrollable">
             <table className="main">
                 <tbody className="fade_in sticky">
                     <tr>
                         <th colSpan={3}></th>
-                        <th colSpan={3}>Leaguemate</th>
-                        <th colSpan={3}>{props.user.display_name}</th>
+                        <th colSpan={2}>Leaguemate</th>
+                        <th colSpan={2}>{props.user.display_name}</th>
                     </tr>
                     <tr>
                         <th colSpan={2}>Leaguemate</th>
                         <th>Count</th>
                         <th>Record</th>
-                        <th colSpan={2}>PF - PA</th>
+                        <th>PF - PA</th>
                         <th>Record</th>
-                        <th colSpan={2}>PF - PA</th>
+                        <th>PF - PA</th>
                     </tr>
                 </tbody>
                 <tbody className="slide_up">
-                    {leaguemates.filter(x => x.isLeaguemateHidden === false).sort((a, b) => b.count - a.count).map((leaguemate, index) =>
+                    {leaguemates.filter(x => x.isLeaguemateHidden === false).sort((a, b) => b.count - a.count).slice((page - 1) * 50, ((page - 1) * 50) + 50).map((leaguemate, index) =>
                         <React.Fragment key={index}>
                             <tr onClick={() => showLeagues(leaguemate.username)} className={leaguemate.isLeaguesHidden ? 'hover clickable' : 'hover clickable active'}>
                                 <td>
@@ -125,17 +147,17 @@ const Leaguemates = (props) => {
                                         <em>{(leaguemate.wins / (leaguemate.wins + leaguemate.losses)).toFixed(4)}</em>
                                     }
                                 </td>
-                                <td colSpan={2}>{leaguemate.fpts} - {leaguemate.fpts_against}</td>
+                                <td>{leaguemate.fpts} - {leaguemate.fpts_against}</td>
                                 <td>
                                     {leaguemate.user_wins}-{leaguemate.user_losses}{leaguemate.user_ties === 0 ? null : `-${leaguemate.user_ties}`} {leaguemate.user_wins + leaguemate.user_losses + leaguemate.user_losses === 0 ? null :
                                         <em>{(leaguemate.user_wins / (leaguemate.user_wins + leaguemate.user_losses + leaguemate.user_ties)).toFixed(4)}</em>
                                     }
                                 </td>
-                                <td colSpan={2}>{leaguemate.fpts} - {leaguemate.fpts_against}</td>
+                                <td>{leaguemate.fpts} - {leaguemate.fpts_against}</td>
                             </tr>
                             {leaguemate.isLeaguesHidden ? null :
                                 <tr>
-                                    <td colSpan={9}>
+                                    <td colSpan={7}>
                                         <LeaguemateLeagues
                                             leaguemate={leaguemate}
                                             user={props.user}

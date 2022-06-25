@@ -236,8 +236,7 @@ const LeaguemateLeagues = (props) => {
                                 {getAge(league.userRoster)}
                             </td>
                         </tr>
-                        {league.isRostersHidden === true || league.userRoster.players === null ||
-                            league.rosters.find(x => x.username === props.leaguemate.username).players === null ? null :
+                        {league.isRostersHidden === true ? null :
                             <tr className="tertiary">
                                 <td colSpan={9} className="top">
                                     <Roster

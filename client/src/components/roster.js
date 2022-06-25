@@ -4,7 +4,7 @@ import allPlayers from '../allPlayers.json';
 const Roster = (props) => {
     const [tab, setTab] = useState('Lineup')
 
-    const bench_players = props.roster.players.filter(x => !props.roster.starters.includes(x) &&
+    const bench_players = props.roster.players === null ? [] : props.roster.players.filter(x => !props.roster.starters.includes(x) &&
         (props.roster.taxi === null || !props.roster.taxi.includes(x)) &&
         (props.roster.reserve === null || !props.roster.reserve.includes(x)))
 
@@ -28,7 +28,7 @@ const Roster = (props) => {
 
     ]
 
-    const groupsPositions = [
+    const groupsPositions = props.roster.players === null ? [] : [
         {
             name: 'QB',
             players: props.roster.players.filter(x => allPlayers[x].position === 'QB').sort((a, b) => parseInt(props.matchPlayer_DV(b)) - parseInt(props.matchPlayer_DV(a)))

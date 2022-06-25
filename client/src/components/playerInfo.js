@@ -28,6 +28,7 @@ const PlayerInfo = (props) => {
                     id: player,
                     name: allPlayers[player] === undefined ? match !== undefined ? match.name : match2 !== undefined ? match2.searchName : '' : allPlayers[player].full_name,
                     searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
+                    position: allPlayers[player] === undefined ? 'Pick' : allPlayers[player].position,
                     value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
                     updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0
                 }
@@ -44,11 +45,12 @@ const PlayerInfo = (props) => {
                     id: player,
                     name: allPlayers[player] === undefined ? match !== undefined ? match.name : match2 !== undefined ? match2.searchName : '' : allPlayers[player].full_name,
                     searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
+                    position: allPlayers[player] === undefined ? 'Pick' : allPlayers[player].position,
                     value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
                     updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0
                 }
             })
-            d = [...d, ...dv.data.filter(x => x.position === 'PI')].flat()
+            d = [...d, ...dv.data.filter(x => x.position === 'PICK')].flat()
 
             setDynastyvalues(d.sort((a, b) => parseInt(b.value) - parseInt(a.value)))
 
@@ -174,7 +176,7 @@ const PlayerInfo = (props) => {
                         </tr>
                     </tbody>
                     <tbody className="slide_up">
-                        {players.filter(x => x.isPlayerHidden === false && !filters.positions.includes(x.position) &&
+                        {players.filter(x => x.isPlayerHidden === false && !filters.positions.includes(allPlayers[x.id].position) &&
                             !filters.types.includes(x.type)).slice((page - 1) * 50, ((page - 1) * 50) + 50).map((player, index) =>
                                 <tr className="hover" key={index}>
                                     <td>

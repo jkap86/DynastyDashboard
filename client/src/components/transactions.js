@@ -3,6 +3,7 @@ import allPlayers from '../allPlayers.json';
 import Search from "./search";
 import emoji from '../emoji.png';
 import Roster from './roster';
+import TransactionLeague from "./transactionLeague";
 
 const Transactions = (props) => {
     const [manager1, setManager1] = useState('')
@@ -291,7 +292,9 @@ const Transactions = (props) => {
                         {transaction.isLeagueHidden ? null :
                             <tr>
                                 <td colSpan={2} className="top">
-
+                                    <TransactionLeague
+                                        scoring_settings={transaction.scoring_settings}
+                                    />
                                 </td>
                                 <td colSpan={5} className="top">
                                     {transaction.users.map(user =>
