@@ -249,6 +249,7 @@ const PlayerShares = (props) => {
                         ${allPlayers[player.id].team === null ? 'FA' : allPlayers[player.id].team}`)}
                         placeholder="Search Player Shares"
                         sendSearched={getSearched}
+                        value={''}
                     />
                     <ol className="page_numbers">
                         {Array.from(Array(Math.ceil(players.filter(x => x.isPlayerHidden === false && !filters.types.includes(x.type) && !filters.positions.includes(x.position)).length / 50)).keys()).map(key => key + 1).map(page_number =>

@@ -26,6 +26,7 @@ const PlayerInfo = (props) => {
                     x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3))
                 return {
                     id: player,
+                    name: allPlayers[player] === undefined ? match !== undefined ? match.name : match2 !== undefined ? match2.searchName : '' : allPlayers[player].full_name,
                     searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
                     value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
                     updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0
@@ -41,6 +42,7 @@ const PlayerInfo = (props) => {
                     x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3))
                 return {
                     id: player,
+                    name: allPlayers[player] === undefined ? match !== undefined ? match.name : match2 !== undefined ? match2.searchName : '' : allPlayers[player].full_name,
                     searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
                     value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
                     updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0
@@ -98,6 +100,7 @@ const PlayerInfo = (props) => {
                 return player.isPlayerHidden = false
             })
         }
+        SetPage(1)
         setProjections([...p])
         setDynastyvalues([...d])
     }
@@ -147,8 +150,9 @@ const PlayerInfo = (props) => {
                 </div>
                 <Search
                     list={tab === 'Projections' ? projections.map(player => player.name) : dynastyvalues.map(player => player.name)}
-                    placeholder="Search Players"
+                    placeholder={`Search ${tab}`}
                     sendSearched={getSearched}
+                    value={''}
                 />
                 <ol className="page_numbers">
                     {Array.from(Array(Math.ceil(players.filter(x => x.isPlayerHidden === false && !filters.types.includes(x.type) && !filters.positions.includes(x.position)).length / 50)).keys()).map(key => key + 1).map(page_number =>

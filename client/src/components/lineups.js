@@ -187,6 +187,7 @@ const Lineups = (props) => {
                         ${allPlayers[player.id].team === null ? 'FA' : allPlayers[player.id].team}`)}
                 placeholder={`Search ${props.tab}`}
                 sendSearched={getSearched}
+                value={''}
             />
             <ol className="page_numbers">
                 {Array.from(Array(Math.ceil(players.filter(x => x.isPlayerHidden === false && !filters.types.includes(x.type) && !filters.positions.includes(x.position)).length / 50)).keys()).map(key => key + 1).map(page_number =>
@@ -245,7 +246,7 @@ const Lineups = (props) => {
                                             onError={(e) => { return e.target.src = player_default }}
                                         />
                                     </td>
-                                    <td colSpan={2} className="left">{allPlayers[player.id].search_full_name}</td>
+                                    <td colSpan={2} className="left">{allPlayers[player.id].full_name}</td>
                                     <td>{allPlayers[player.id].age}</td>
                                     <td colSpan={2}>
                                         <p className="record">

@@ -4,6 +4,8 @@ import SliderToggle from './sliderToggle';
 import PlayerInfo from "./playerInfo";
 import Leagues from "./leagues";
 import PlayerShares from "./playerShares";
+import Leaguemates from "./leaguemates";
+import Transactions from "./transactions";
 
 const View = (props) => {
     const [isLoading_L, setIsLoading_L] = useState(false)
@@ -173,6 +175,31 @@ const View = (props) => {
                     matchPlayer_DV={matchPlayer_DV}
                     matchPlayer_Proj={matchPlayer_Proj}
                     matchPick={matchPick}
+                />
+            : null
+        }
+
+        {activeTab === 'Leaguemates' ?
+            isLoading_L ? <h1>Loading...</h1> :
+                <Leaguemates
+                    leagues={leagues.filter((x) => x.isLeagueTypeHidden === false)}
+                    user={user}
+                    matchPlayer_DV={matchPlayer_DV}
+                    matchPlayer_Proj={matchPlayer_Proj}
+                    matchPick={matchPick}
+                />
+            : null
+        }
+
+        {activeTab === 'Transactions' ?
+            isLoading_T ? <h1>Loading...</h1> :
+                <Transactions
+                    transactions={transactions.filter(x => leagues.find(y => y.league_id === x.league_id) !== undefined &&
+                        leagues.find(y => y.league_id === x.league_id).isLeagueTypeHidden === false)}
+                    user={user}
+                    matchPlayer_DV={matchPlayer_DV}
+                    matchPick={matchPick}
+                    matchPlayer_Proj={matchPlayer_Proj}
                 />
             : null
         }

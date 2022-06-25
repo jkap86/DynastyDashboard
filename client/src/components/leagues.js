@@ -13,7 +13,12 @@ const Leagues = (props) => {
     const [sortToggle, setSortToggle] = useState(false)
 
     useEffect(() => {
-        setLeagues(props.leagues.sort((a, b) => a.index - b.index))
+        setLeagues([...props.leagues.map(league => {
+            return {
+                ...league,
+                isLeagueHidden: false
+            }
+        }).sort((a, b) => a.index - b.index)])
     }, [props.leagues])
 
     const getAge = (roster) => {
@@ -213,6 +218,7 @@ const Leagues = (props) => {
                 list={leagues.map(league => league.name)}
                 placeholder={`Search Leagues`}
                 sendSearched={getSearched}
+                value={''}
             />
         </div>
         <div className="view_scrollable">

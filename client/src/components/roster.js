@@ -15,15 +15,15 @@ const Roster = (props) => {
         },
         {
             name: 'Bench',
-            players: bench_players,
+            players: bench_players.sort((a, b) => parseInt(props.matchPlayer_DV(b)) - parseInt(props.matchPlayer_DV(a))),
         },
         {
             name: 'Taxi',
-            players: props.roster.taxi
+            players: props.roster.taxi === null ? null : props.roster.taxi.sort((a, b) => parseInt(props.matchPlayer_DV(b)) - parseInt(props.matchPlayer_DV(a)))
         },
         {
             name: 'IR',
-            players: props.roster.reserve
+            players: props.roster.reserve === null ? null : props.roster.reserve.sort((a, b) => parseInt(props.matchPlayer_DV(b)) - parseInt(props.matchPlayer_DV(a)))
         }
 
     ]
@@ -31,19 +31,19 @@ const Roster = (props) => {
     const groupsPositions = [
         {
             name: 'QB',
-            players: props.roster.players.filter(x => allPlayers[x].position === 'QB')
+            players: props.roster.players.filter(x => allPlayers[x].position === 'QB').sort((a, b) => parseInt(props.matchPlayer_DV(b)) - parseInt(props.matchPlayer_DV(a)))
         },
         {
             name: 'RB',
-            players: props.roster.players.filter(x => allPlayers[x].position === 'RB')
+            players: props.roster.players.filter(x => allPlayers[x].position === 'RB').sort((a, b) => parseInt(props.matchPlayer_DV(b)) - parseInt(props.matchPlayer_DV(a)))
         },
         {
             name: 'WR',
-            players: props.roster.players.filter(x => allPlayers[x].position === 'WR')
+            players: props.roster.players.filter(x => allPlayers[x].position === 'WR').sort((a, b) => parseInt(props.matchPlayer_DV(b)) - parseInt(props.matchPlayer_DV(a)))
         },
         {
             name: 'TE',
-            players: props.roster.players.filter(x => allPlayers[x].position === 'TE')
+            players: props.roster.players.filter(x => allPlayers[x].position === 'TE').sort((a, b) => parseInt(props.matchPlayer_DV(b)) - parseInt(props.matchPlayer_DV(a)))
         }
 
     ]
