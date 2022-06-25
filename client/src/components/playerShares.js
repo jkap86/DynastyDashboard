@@ -22,8 +22,8 @@ const PlayerShares = (props) => {
             if (index === -1) {
                 ps.push({
                     id: p.id,
-                    position: p.id === '0' ? null : ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[p.id].position) ? allPlayers[p.id].position : 'Other',
-                    type: p.id === '0' ? null : allPlayers[p.id].years_exp === 0 ? 'R' : 'V',
+                    position: p.id === '0' || allPlayers[p.id] === undefined ? null : ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[p.id].position) ? allPlayers[p.id].position : 'Other',
+                    type: p.id === '0' || allPlayers[p.id] === undefined ? null : allPlayers[p.id].years_exp === 0 ? 'R' : 'V',
                     count: 1,
                     leagues: [p.league],
                     wins: p.wins,
