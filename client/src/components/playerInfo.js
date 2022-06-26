@@ -50,7 +50,7 @@ const PlayerInfo = (props) => {
                     updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0
                 }
             })
-            d = [...d, ...dv.data.filter(x => x.position === 'PICK')].flat()
+            d = [...d, ...dv.data.filter(x => x.position === 'PI')].flat()
 
             setDynastyvalues(d.sort((a, b) => parseInt(b.value) - parseInt(a.value)))
 
@@ -176,7 +176,7 @@ const PlayerInfo = (props) => {
                         </tr>
                     </tbody>
                     <tbody className="slide_up">
-                        {players.filter(x => x.isPlayerHidden === false && !filters.positions.includes(allPlayers[x.id].position) &&
+                        {players.filter(x => x.isPlayerHidden === false && !filters.positions.includes(x.position) &&
                             !filters.types.includes(x.type)).slice((page - 1) * 50, ((page - 1) * 50) + 50).map((player, index) =>
                                 <tr className="hover" key={index}>
                                     <td>
