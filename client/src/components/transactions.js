@@ -227,7 +227,7 @@ const Transactions = (props) => {
                 </tr>
             </tbody>
             <tbody className="slide_up">
-                {transactions.filter(x => x.isTransactionHidden === false && !filters.types.includes(x.type)).slice((page - 1) * 50, ((page - 1) * 50) + 50).map((transaction, index) =>
+                {transactions.filter(x => x.isTransactionHidden === false && x.status === 'complete' && !filters.types.includes(x.type)).slice((page - 1) * 50, ((page - 1) * 50) + 50).map((transaction, index) =>
                     <React.Fragment key={index}>
                         <tr onClick={() => showLeague(transaction.transaction_id)} className={transaction.isLeagueHidden ? 'hover clickable' : 'hover active clickable'}>
                             <td colSpan={1}>{new Date(transaction.status_updated).toLocaleString()}</td>
@@ -263,7 +263,7 @@ const Transactions = (props) => {
                                             {transaction.adds === null ? null : Object.keys(transaction.adds)
                                                 .filter(x => transaction.adds[x] === user.roster_id).map((player, index) =>
                                                     <p className="green" key={index}>
-                                                        + {allPlayers[player].full_name}
+                                                        + {allPlayers[player].full_name} {transaction.type === 'waiver' ? `$${transaction.settings.waiver_bid}` : null}
                                                     </p>
                                                 )
                                             }
