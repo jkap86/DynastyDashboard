@@ -14,7 +14,7 @@ const Transactions = (props) => {
     const [filters, setFilters] = useState({ types: [] })
 
     useEffect(() => {
-        setTransactions(props.transactions.sort((a, b) => b.status_updated - a.status_updated))
+        setTransactions(props.transactions.filter(x => x.status === 'complete').sort((a, b) => b.status_updated - a.status_updated))
     }, [props.transactions])
 
     const getSearched = (data, type) => {
@@ -227,7 +227,7 @@ const Transactions = (props) => {
                 </tr>
             </tbody>
             <tbody className="slide_up">
-                {transactions.filter(x => x.isTransactionHidden === false && x.status === 'complete' && !filters.types.includes(x.type)).slice((page - 1) * 50, ((page - 1) * 50) + 50).map((transaction, index) =>
+                {transactions.filter(x => x.isTransactionHidden === false && !filters.types.includes(x.type)).slice((page - 1) * 50, ((page - 1) * 50) + 50).map((transaction, index) =>
                     <React.Fragment key={index}>
                         <tr onClick={() => showLeague(transaction.transaction_id)} className={transaction.isLeagueHidden ? 'hover clickable' : 'hover active clickable'}>
                             <td colSpan={1}>{new Date(transaction.status_updated).toLocaleString()}</td>

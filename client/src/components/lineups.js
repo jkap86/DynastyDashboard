@@ -264,7 +264,7 @@ const Lineups = (props) => {
                                         </em>
                                     </td>
                                     <td>
-                                        {props.matchPlayer_Proj(player.id).toFixed(1)}
+                                        {props.matchPlayer_Proj(player.id)}
                                     </td>
                                 </tr>
                                 {player.isLeaguesHidden ? null :
@@ -273,6 +273,7 @@ const Lineups = (props) => {
                                             <LineupLeagues
                                                 leagues={player.leagues}
                                                 user={props.user}
+                                                matchPlayer_Proj={props.matchPlayer_Proj}
                                             />
                                         </td>
                                     </tr>

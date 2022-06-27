@@ -36,7 +36,7 @@ const getLeagues = async (username, season, week) => {
     const leagues = []
     await Promise.all(l.data.map(async (league, index) => {
         const [rosters, users, matchups, traded_picks] = await Promise.all([
-            await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/rosters`).catch((err) => data = []),
+            await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/rosters`).catch((err) => rosters.data = []),
             await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/users`).catch((err) => console.log(err)),
             await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/matchups/${Math.max(week, 1)}`).catch((err) => console.log(err)),
             await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/traded_picks`).catch((err) => console.log(err))

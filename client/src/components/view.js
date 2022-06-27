@@ -80,7 +80,7 @@ const View = (props) => {
         } else {
             const match = projections.find(x => x.id === player)
             if (match) {
-                return match.updated_value
+                return match.updated_value.toFixed(1)
             } else {
                 return 0
             }
