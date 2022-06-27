@@ -7,6 +7,7 @@ import allPlayers from '../allPlayers.json'
 const PlayerInfo = (props) => {
     const [isLoading, setIsLoading] = useState(false)
     const [projections, setProjections] = useState([])
+    const [projections_weekly, setProjections_weekly] = useState([])
     const [dynastyvalues, setDynastyvalues] = useState([])
     const [tab, setTab] = useState('Projections')
     const [filters, setFilters] = useState({ positions: [], types: [] })
@@ -15,8 +16,9 @@ const PlayerInfo = (props) => {
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true)
-            const [proj, dv] = await Promise.all([
+            const [proj, proj_weekly, dv] = await Promise.all([
                 await axios.get('/projections'),
+                await axios.get('/projections_weekly'),
                 await axios.get('/dynastyvalues')
             ])
             let p = Object.keys(allPlayers).filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x].position)).map(player => {
@@ -30,11 +32,30 @@ const PlayerInfo = (props) => {
                     searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
                     position: allPlayers[player] === undefined ? 'Pick' : allPlayers[player].position,
                     value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
-                    updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0
+                    updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0,
+                    isPlayerHidden: false
                 }
             })
 
             setProjections(p.sort((a, b) => parseFloat(b.value) - parseFloat(a.value)))
+
+            let pw = Object.keys(allPlayers).filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x].position)).map(player => {
+                const match = proj_weekly.data.find(x => x.searchName === allPlayers[player].search_full_name && (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2)))
+                const match2 = proj_weekly.data.find(x => allPlayers[player].search_full_name !== undefined && (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2)) &&
+                    x.searchName.slice(-5, -2) === allPlayers[player].search_full_name.slice(-5, -2) &&
+                    x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3))
+                return {
+                    id: player,
+                    name: allPlayers[player] === undefined ? match !== undefined ? match.name : match2 !== undefined ? match2.searchName : '' : allPlayers[player].full_name,
+                    searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
+                    position: allPlayers[player] === undefined ? 'Pick' : allPlayers[player].position,
+                    value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
+                    updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0,
+                    isPlayerHidden: false
+                }
+            })
+
+            setProjections_weekly(pw.sort((a, b) => parseFloat(b.value) - parseFloat(a.value)))
 
             let d = Object.keys(allPlayers).filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x].position)).map(player => {
                 const match = dv.data.find(x => x.searchName === allPlayers[player].search_full_name && ((allPlayers[player].team === null && x.team === 'FA') || (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2))))
@@ -47,7 +68,8 @@ const PlayerInfo = (props) => {
                     searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
                     position: allPlayers[player] === undefined ? 'Pick' : allPlayers[player].position,
                     value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
-                    updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0
+                    updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0,
+                    isPlayerHidden: false
                 }
             })
             d = [...d, ...dv.data.filter(x => x.position === 'PI')].flat()
@@ -62,6 +84,10 @@ const PlayerInfo = (props) => {
     useEffect(() => {
         props.sendProjections(projections)
     }, [projections])
+
+    useEffect(() => {
+        props.sendProjections_weekly(projections_weekly)
+    }, [projections_weekly])
 
     useEffect(() => {
         props.sendDV(dynastyvalues)
@@ -108,20 +134,31 @@ const PlayerInfo = (props) => {
     }
 
     const updateValue = (name, team, position, updated_value) => {
-        const p = tab === 'Projections' ? projections : dynastyvalues
+        const p = tab === 'Projections' ? projections :
+            tab === 'Week Projections' ? projections_weekly :
+                dynastyvalues
         p.filter(x => x.name === name && x.team === team && x.position === position).map(player => {
             return player.updated_value = updated_value
         })
-        setProjections([...p])
+        if (tab === 'Projections') {
+            setProjections([...p])
+        } else if (tab === 'Week Projections') {
+            setProjections_weekly([...p])
+        } else {
+            setDynastyvalues([...p])
+        }
+
     }
 
-    const players = tab === 'Projections' ? projections : dynastyvalues
-
+    const players = tab === 'Projections' ? projections :
+        tab === 'Week Projections' ? projections_weekly :
+            dynastyvalues
 
     return isLoading ? <h1>Loading...</h1> :
         <>
             <div className="player_nav">
-                <button className={tab === 'Projections' ? 'active clickable' : 'clickable'} onClick={() => setTab('Projections')}>Projections</button>
+                <button className={tab === 'Projections' ? 'active clickable' : 'clickable'} onClick={() => setTab('Projections')}>ROS Projections</button>
+                <button className={tab === 'Week Projections' ? 'active clickable' : 'clickable'} onClick={() => setTab('Week Projections')}>Week Projections</button>
                 <button className={tab === 'Dynasty Values' ? 'active clickable' : 'clickable'} onClick={() => setTab('Dynasty Values')}>Dynasty Values</button>
             </div>
             <div className="search_wrapper">

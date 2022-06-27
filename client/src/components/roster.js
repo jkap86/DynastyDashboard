@@ -80,7 +80,7 @@ const Roster = (props) => {
                                                     {group.players.map((player, index) =>
                                                         <tr className="hover3" key={index}>
                                                             <td className="black">
-                                                                <em style={{ filter: `invert(${(props.matchPlayer_DV(player) / 200) + 50}%) brightness(2)` }}>
+                                                                <em className="bold" style={{ filter: `invert(${(props.matchPlayer_DV(player) / 200) + 50}%) brightness(2)` }}>
                                                                     {props.matchPlayer_DV(player)}
                                                                 </em>
                                                             </td>
@@ -92,7 +92,7 @@ const Roster = (props) => {
                                                                 }
                                                             </td>
                                                             <td className="black">
-                                                                <em style={{ filter: `invert(${(props.matchPlayer_Proj(player) / 8.5) + 50}%) brightness(2)` }}>
+                                                                <em className="bold" style={{ filter: `invert(${(props.matchPlayer_Proj(player) / 8.5) + 50}%) brightness(2)` }}>
                                                                     {props.matchPlayer_Proj(player)}
                                                                 </em>
                                                             </td>
@@ -121,7 +121,7 @@ const Roster = (props) => {
                                                     {group.players === null ? null : group.players.map((player, index) =>
                                                         <tr className="hover3" key={index}>
                                                             <td className="black">
-                                                                <em style={{ filter: `invert(${(props.matchPlayer_DV(player) / 200) + 50}%) brightness(2)` }}>
+                                                                <em className="bold" style={{ filter: `invert(${(props.matchPlayer_DV(player) / 200) + 50}%) brightness(2)` }}>
                                                                     {props.matchPlayer_DV(player)}
                                                                 </em>
                                                             </td>
@@ -132,7 +132,7 @@ const Roster = (props) => {
                                                                 }
                                                             </td>
                                                             <td className="black">
-                                                                <em style={{ filter: `invert(${(props.matchPlayer_Proj(player) / 8.5) + 50}%) brightness(2)` }}>
+                                                                <em className="bold" style={{ filter: `invert(${(props.matchPlayer_Proj(player) / 8.5) + 50}%) brightness(2)` }}>
                                                                     {props.matchPlayer_Proj(player)}
                                                                 </em>
                                                             </td>
@@ -156,7 +156,7 @@ const Roster = (props) => {
                                             {props.roster.draft_picks.sort((a, b) => a.season - b.season || a.round - b.round).map((pick, index) =>
                                                 <tr className="hover3" key={index}>
                                                     <td className='black'>
-                                                        <em style={{ filter: `invert(${(props.matchPick(pick.season, pick.round) / 200) + 50}%) brightness(2)` }}>
+                                                        <em className="bold" style={{ filter: `invert(${(props.matchPick(pick.season, pick.round) / 200) + 50}%) brightness(2)` }}>
                                                             {props.matchPick(pick.season, pick.round)}
                                                         </em>
                                                     </td>

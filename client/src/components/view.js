@@ -15,6 +15,7 @@ const View = (props) => {
     const [filters, setFilters] = useState({ r_d: "All", b_s: "All" });
     const [user, setUser] = useState({});
     const [projections, setProjections] = useState([])
+    const [projections_weekly, setProjections_weekly] = useState([])
     const [dv, setDv] = useState([]);
     const [leagues, setLeagues] = useState([]);
     const [transactions, setTransactions] = useState([])
@@ -81,7 +82,20 @@ const View = (props) => {
         } else {
             const match = projections.find(x => x.id === player)
             if (match) {
-                return match.updated_value.toFixed(1)
+                return match.updated_value
+            } else {
+                return 0
+            }
+        }
+    }
+
+    const matchPlayer_Proj_W = (player) => {
+        if (player === '0') {
+            return 0
+        } else {
+            const match = projections_weekly.find(x => x.id === player)
+            if (match) {
+                return match.updated_value
             } else {
                 return 0
             }
@@ -164,6 +178,7 @@ const View = (props) => {
             <PlayerInfo
                 sendProjections={(data) => setProjections(data)}
                 sendDV={(data) => setDv(data)}
+                sendProjections_weekly={(data) => setProjections_weekly(data)}
             />
         </div>
 
@@ -185,6 +200,7 @@ const View = (props) => {
                     user={user}
                     matchPlayer_DV={matchPlayer_DV}
                     matchPlayer_Proj={matchPlayer_Proj}
+                    matchPlayer_Proj_W={matchPlayer_Proj_W}
                     matchPick={matchPick}
                 />
             : null

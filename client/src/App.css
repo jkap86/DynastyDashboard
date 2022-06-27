@@ -341,7 +341,7 @@ tr.hover2.active em {
   filter: invert(1);
 }
 
-em {
+em.bold {
   color: var(--fourth-color);
   font-weight: 900;
   text-shadow: none;

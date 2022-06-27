@@ -7,6 +7,7 @@ const axios = require('axios')
 const fs = require('fs')
 const router = express.Router()
 const projections = require('./workers/workerProjections')
+const projections_weekly = require('./workers/workerProjections_Weekly')
 const dv = require('./workers/workerDV')
 const leagues = require('./workers/workerLeagues')
 const transactions = require('./workers/workerTransactions')
@@ -39,6 +40,8 @@ app.get('/user', async (req, res) => {
 app.get('/dynastyvalues', dv)
 
 app.get('/projections', projections)
+
+app.get('/projections_weekly', projections_weekly)
 
 app.get('/leagues', leagues)
 

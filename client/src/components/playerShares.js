@@ -300,7 +300,7 @@ const PlayerShares = (props) => {
                                             </td>
                                             <td colSpan={2}>{player.fpts}-{player.fpts_against}</td>
                                             <td colSpan={2}>
-                                                <em style={{ filter: `invert(${(props.matchPlayer_DV(player.id) / 200) + 50}%) brightness(2)` }}>
+                                                <em className="bold" style={{ filter: `invert(${(props.matchPlayer_DV(player.id) / 200) + 50}%) brightness(2)` }}>
                                                     {props.matchPlayer_DV(player.id)}
                                                 </em>
                                             </td>
@@ -333,6 +333,7 @@ const PlayerShares = (props) => {
                 leagues={props.leagues}
                 matchPlayer_DV={props.matchPlayer_DV}
                 matchPlayer_Proj={props.matchPlayer_Proj}
+                matchPlayer_Proj_W={props.matchPlayer_Proj_W}
                 tab={tab}
                 user={props.user}
             />

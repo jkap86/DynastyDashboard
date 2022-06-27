@@ -42,9 +42,23 @@ const LineupLeagues = (props) => {
                                 />
                             </td>
                             <td colSpan={2} className="left">{league.name}</td>
-                            <td colSpan={2}>{league.matchup === undefined ? '-' : league.matchup.points}</td>
                             <td colSpan={2}>
-                                {league.matchup_opponent === undefined ? '-' : league.matchup_opponent.points}
+                                {
+                                    league.matchup === undefined ? '-' :
+                                        `${league.matchup.points} (${league.matchup.starters.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj_W(cur)), 0).toFixed(1)})`
+                                }
+                            </td>
+                            <td colSpan={2}>
+                                {
+                                    league.matchup_opponent === undefined ? '-' :
+                                        league.matchup_opponent.points
+                                }
+                                <br />
+                                <em>{
+                                    league.matchup_opponent === undefined ? null :
+                                        `(${league.matchup_opponent.starters.reduce((acc, cur) => acc + props.matchPlayer_Proj_W(cur), 0).toFixed(1)})`
+                                }
+                                </em>
                             </td>
                             <td>
                                 <img
@@ -65,6 +79,7 @@ const LineupLeagues = (props) => {
                                             bench={league.matchup.players.filter(x => !league.matchup.starters.includes(x))}
                                             players_points={league.matchup.players_points}
                                             username={props.user.display_name}
+                                            matchPlayer_Proj_W={props.matchPlayer_Proj_W}
                                         />
                                     }
                                 </td>
@@ -75,6 +90,7 @@ const LineupLeagues = (props) => {
                                             bench={league.matchup_opponent.players.filter(x => !league.matchup.starters.includes(x))}
                                             players_points={league.matchup_opponent.players_points}
                                             username={league.opponent.username}
+                                            matchPlayer_Proj_W={props.matchPlayer_Proj_W}
                                         />
                                     }
                                 </td>

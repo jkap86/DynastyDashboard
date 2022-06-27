@@ -226,6 +226,8 @@ const Lineups = (props) => {
                                         <LineupLeagues
                                             leagues={player.leagues}
                                             user={props.user}
+                                            matchPlayer_Proj={props.matchPlayer_Proj}
+                                            matchPlayer_Proj_W={props.matchPlayer_Proj_W}
                                         />
                                     </td>
                                 </tr>
@@ -259,7 +261,7 @@ const Lineups = (props) => {
                                     </td>
                                     <td colSpan={2}>{player.fpts} - {player.fpts_against}</td>
                                     <td>
-                                        <em style={{ filter: `invert(${(props.matchPlayer_DV(player.id) / 200) + 50}%) brightness(2)` }}>
+                                        <em className="bold" style={{ filter: `invert(${(props.matchPlayer_DV(player.id) / 200) + 50}%) brightness(2)` }}>
                                             {props.matchPlayer_DV(player.id)}
                                         </em>
                                     </td>
@@ -274,6 +276,7 @@ const Lineups = (props) => {
                                                 leagues={player.leagues}
                                                 user={props.user}
                                                 matchPlayer_Proj={props.matchPlayer_Proj}
+                                                matchPlayer_Proj_W={props.matchPlayer_Proj_W}
                                             />
                                         </td>
                                     </tr>
