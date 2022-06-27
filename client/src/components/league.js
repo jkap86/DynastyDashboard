@@ -64,6 +64,9 @@ const League = (props) => {
                 case 'TE':
                     p = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
                     break;
+                case `Week ${props.state.week}`:
+                    p = roster.starters.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj_W(cur)), 0)
+                    break;
                 default:
                     p = 0
             }
@@ -147,8 +150,9 @@ const League = (props) => {
                             <option>RB</option>
                             <option>WR</option>
                             <option>TE</option>
+                            <option>Week {props.state.week}</option>
                         </select>
-                        <p className="clickable" onClick={() => sort('Projection')}>ROS Proj</p>
+                        <p className="clickable" onClick={() => sort('Projection')}>Proj</p>
                     </th>
                     <th>
                         <select value={group_value} onChange={(e) => setGroup_value(e.target.value)}>

@@ -91,6 +91,9 @@ const Leagues = (props) => {
                         case 'TE':
                             proj = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
                             break;
+                        case `Week ${props.state.week}`:
+                            proj = roster.starters.filter(x => x !== '0').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj_W(cur)), 0)
+                            break;
                     }
                     return {
                         ...roster,
@@ -259,8 +262,9 @@ const Leagues = (props) => {
                                 <option>RB</option>
                                 <option>WR</option>
                                 <option>TE</option>
+                                <option>Week {props.state.week}</option>
                             </select>
-                            ROS Rank
+                            Rank {group_rank === 'Week' ? null : `ROS`}
                         </th>
                         <th colSpan={2}>
                             <select value={group_value} onChange={(e) => setGroup_value(e.target.value)}>
@@ -328,10 +332,12 @@ const Leagues = (props) => {
                                             getValue={getValue}
                                             matchPlayer_DV={props.matchPlayer_DV}
                                             matchPlayer_Proj={props.matchPlayer_Proj}
+                                            matchPlayer_Proj_W={props.matchPlayer_Proj_W}
                                             matchPick={props.matchPick}
                                             sendGroupRank={(data) => setGroup_rank(data)}
                                             sendGroupValue={(data) => setGroup_value(data)}
                                             sendGroupAge={(data) => setGroup_age(data)}
+                                            state={props.state}
                                         />
                                     </td>
                                 </tr>

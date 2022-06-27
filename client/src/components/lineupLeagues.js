@@ -45,8 +45,15 @@ const LineupLeagues = (props) => {
                             <td colSpan={2}>
                                 {
                                     league.matchup === undefined ? '-' :
-                                        `${league.matchup.points} (${league.matchup.starters.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj_W(cur)), 0).toFixed(1)})`
+                                        league.matchup.points
                                 }
+                                <br />
+                                <em>
+                                    {
+                                        league.matchup === undefined ? null :
+                                            `(${league.matchup.starters.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj_W(cur)), 0).toFixed(1)})`
+                                    }
+                                </em>
                             </td>
                             <td colSpan={2}>
                                 {
@@ -54,10 +61,11 @@ const LineupLeagues = (props) => {
                                         league.matchup_opponent.points
                                 }
                                 <br />
-                                <em>{
-                                    league.matchup_opponent === undefined ? null :
-                                        `(${league.matchup_opponent.starters.reduce((acc, cur) => acc + props.matchPlayer_Proj_W(cur), 0).toFixed(1)})`
-                                }
+                                <em>
+                                    {
+                                        league.matchup_opponent === undefined ? null :
+                                            `(${league.matchup_opponent.starters.reduce((acc, cur) => acc + props.matchPlayer_Proj_W(cur), 0).toFixed(1)})`
+                                    }
                                 </em>
                             </td>
                             <td>

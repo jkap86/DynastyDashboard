@@ -9,6 +9,7 @@ import Transactions from "./transactions";
 import emoji from '../emoji.png';
 
 const View = (props) => {
+    const [state, setState] = useState({})
     const [isLoading_L, setIsLoading_L] = useState(false)
     const [isLoading_T, setIsLoading_T] = useState(false)
     const [activeTab, setActiveTab] = useState("Player Info");
@@ -31,7 +32,8 @@ const View = (props) => {
                     username: props.user.username
                 }
             })
-            setLeagues(l.data)
+            setLeagues(l.data.leagues)
+            setState(l.data.state)
             setIsLoading_L(false)
             const t = await axios.get('/transactions', {
                 params: {
@@ -131,6 +133,7 @@ const View = (props) => {
                 <p className="image">{user.display_name}</p>
             </div>
         </h2>
+        <h2>{state.season} Week {state.week}</h2>
         <div className="nav_container">
             <button
                 onClick={() => setActiveTab('Leagues')}
@@ -189,6 +192,8 @@ const View = (props) => {
                     matchPlayer_DV={matchPlayer_DV}
                     matchPick={matchPick}
                     matchPlayer_Proj={matchPlayer_Proj}
+                    matchPlayer_Proj_W={matchPlayer_Proj_W}
+                    state={state}
                 />
             : null
         }

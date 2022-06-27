@@ -114,11 +114,17 @@ const getLeagues = async (username, season, week) => {
 
 router.get('/leagues', async (req, res, next) => {
     const username = req.query.username
-    const state = await axios.get(`https://api.sleeper.app/v1/state/nfl`, { timeout: 3000 })
+    const state = await axios.get(`https://api.sleeper.app/v1/state/nfl`)
     const season = state.data.league_season
     const week = state.data.display_week
     const result = await getLeagues(username, season, week)
-    res.send(result)
+    res.send({
+        state: {
+            season: season,
+            week: week
+        },
+        leagues: result
+    })
     next
 })
 
