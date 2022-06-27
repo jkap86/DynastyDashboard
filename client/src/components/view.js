@@ -6,6 +6,7 @@ import Leagues from "./leagues";
 import PlayerShares from "./playerShares";
 import Leaguemates from "./leaguemates";
 import Transactions from "./transactions";
+import emoji from '../emoji.png';
 
 const View = (props) => {
     const [isLoading_L, setIsLoading_L] = useState(false)
@@ -105,7 +106,17 @@ const View = (props) => {
             Player Projections/Values
         </button>
 
-        <h2>{user.display_name}</h2>
+        <h2>
+            <div className="image_container">
+                <img
+                    style={{ animation: `rotation ${Math.random() * 10 + 2}s infinite ease-out` }}
+                    className="thumbnail faded"
+                    alt="avatar"
+                    src={user.avatar === null ? emoji : `https://sleepercdn.com/avatars/${user.avatar}`}
+                />
+                <p className="image">{user.display_name}</p>
+            </div>
+        </h2>
         <div className="nav_container">
             <button
                 onClick={() => setActiveTab('Leagues')}
