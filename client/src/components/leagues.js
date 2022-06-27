@@ -264,7 +264,7 @@ const Leagues = (props) => {
                                 <option>TE</option>
                                 <option>Week {props.state.week}</option>
                             </select>
-                            Rank {group_rank === 'Week' ? null : `ROS`}
+                            Rank {group_rank === `Week ${props.state.week}` ? null : `ROS`}
                         </th>
                         <th colSpan={2}>
                             <select value={group_value} onChange={(e) => setGroup_value(e.target.value)}>

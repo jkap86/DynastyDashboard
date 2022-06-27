@@ -106,12 +106,19 @@ const PlayerInfo = (props) => {
 
     const getSearched = (data) => {
         let p = projections
+        let pw = projections_weekly
         let d = dynastyvalues
         if (data) {
             p.map(player => {
                 return player.isPlayerHidden = true
             })
             p.filter(x => x.name === data).map(player => {
+                return player.isPlayerHidden = false
+            })
+            pw.map(player => {
+                return player.isPlayerHidden = true
+            })
+            pw.filter(x => x.name === data).map(player => {
                 return player.isPlayerHidden = false
             })
             d.map(player => {
@@ -124,12 +131,16 @@ const PlayerInfo = (props) => {
             p.map(player => {
                 return player.isPlayerHidden = false
             })
+            pw.map(player => {
+                return player.isPlayerHidden = false
+            })
             d.map(player => {
                 return player.isPlayerHidden = false
             })
         }
         SetPage(1)
         setProjections([...p])
+        setProjections_weekly([...pw])
         setDynastyvalues([...d])
     }
 
@@ -188,7 +199,9 @@ const PlayerInfo = (props) => {
                     }
                 </div>
                 <Search
-                    list={tab === 'Projections' ? projections.map(player => player.name) : dynastyvalues.map(player => player.name)}
+                    list={tab === 'Projections' ? projections.map(player => player.name) :
+                        tab === 'Week Projections' ? projections_weekly.map(player => player.name) :
+                            dynastyvalues.map(player => player.name)}
                     placeholder={`Search ${tab}`}
                     sendSearched={getSearched}
                     value={''}
