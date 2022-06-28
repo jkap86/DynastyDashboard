@@ -303,6 +303,8 @@ const Transactions = (props) => {
                                             matchPlayer_DV={props.matchPlayer_DV}
                                             matchPick={props.matchPick}
                                             matchPlayer_Proj={props.matchPlayer_Proj}
+                                            matchPlayer_Proj_W={props.matchPlayer_Proj_W}
+                                            state={props.state}
                                         />
                                     )}
                                 </td>

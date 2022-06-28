@@ -163,7 +163,9 @@ const Leaguemates = (props) => {
                                             user={props.user}
                                             matchPlayer_DV={props.matchPlayer_DV}
                                             matchPlayer_Proj={props.matchPlayer_Proj}
+                                            matchPlayer_Proj_W={props.matchPlayer_Proj_W}
                                             matchPick={props.matchPick}
+                                            state={props.state}
                                         />
                                     </td>
                                 </tr>

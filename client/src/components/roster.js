@@ -3,6 +3,7 @@ import allPlayers from '../allPlayers.json';
 
 const Roster = (props) => {
     const [tab, setTab] = useState('Lineup')
+    const [projType, setProjType] = useState('ROS')
 
     const bench_players = props.roster.players === null ? [] : props.roster.players.filter(x => !props.roster.starters.includes(x) &&
         (props.roster.taxi === null || !props.roster.taxi.includes(x)) &&
@@ -74,7 +75,15 @@ const Roster = (props) => {
                                                         </th>
                                                         <th>{group.name}</th>
                                                         <th>
-                                                            {group.players.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0).toLocaleString("en-US")}
+                                                            <select value={projType} onChange={(e) => setProjType(e.target.value)}>
+                                                                <option>Week {props.state.week}</option>
+                                                                <option>ROS</option>
+                                                            </select>
+                                                            <br />
+                                                            {projType === 'ROS' ?
+                                                                group.players.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0).toLocaleString("en-US") :
+                                                                group.players.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj_W(cur)), 0).toLocaleString("en-US")
+                                                            }
                                                         </th>
                                                     </tr>
                                                     {group.players.map((player, index) =>
@@ -93,7 +102,7 @@ const Roster = (props) => {
                                                             </td>
                                                             <td className="black">
                                                                 <em className="bold" style={{ filter: `invert(${(props.matchPlayer_Proj(player) / 8.5) + 50}%) brightness(2)` }}>
-                                                                    {props.matchPlayer_Proj(player)}
+                                                                    {projType === 'ROS' ? props.matchPlayer_Proj(player) : props.matchPlayer_Proj_W(player)}
                                                                 </em>
                                                             </td>
                                                         </tr>
@@ -115,7 +124,15 @@ const Roster = (props) => {
                                                         </th>
                                                         <th>{group.name}</th>
                                                         <th>
-                                                            {group.players.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0).toLocaleString("en-US")}
+                                                            <select value={projType} onChange={(e) => setProjType(e.target.value)}>
+                                                                <option>Week {props.state.week}</option>
+                                                                <option>ROS</option>
+                                                            </select>
+                                                            <br />
+                                                            {projType === 'ROS' ?
+                                                                group.players.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0).toLocaleString("en-US") :
+                                                                group.players.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj_W(cur)), 0).toLocaleString("en-US")
+                                                            }
                                                         </th>
                                                     </tr>
                                                     {group.players === null ? null : group.players.map((player, index) =>
@@ -133,7 +150,7 @@ const Roster = (props) => {
                                                             </td>
                                                             <td className="black">
                                                                 <em className="bold" style={{ filter: `invert(${(props.matchPlayer_Proj(player) / 8.5) + 50}%) brightness(2)` }}>
-                                                                    {props.matchPlayer_Proj(player)}
+                                                                    {projType === 'ROS' ? props.matchPlayer_Proj(player) : props.matchPlayer_Proj_W(player)}
                                                                 </em>
                                                             </td>
                                                         </tr>

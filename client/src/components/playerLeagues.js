@@ -329,6 +329,8 @@ const PlayerLeagues = (props) => {
                                             matchPick={props.matchPick}
                                             matchPlayer_DV={props.matchPlayer_DV}
                                             matchPlayer_Proj={props.matchPlayer_Proj}
+                                            matchPlayer_Proj_W={props.matchPlayer_Proj_W}
+                                            state={props.state}
                                         />
                                     </td>
                                 </tr>
@@ -424,6 +426,8 @@ const PlayerLeagues = (props) => {
                                             matchPick={props.matchPick}
                                             matchPlayer_DV={props.matchPlayer_DV}
                                             matchPlayer_Proj={props.matchPlayer_Proj}
+                                            matchPlayer_Proj_W={props.matchPlayer_Proj_W}
+                                            state={props.state}
                                         />
                                     </td>
                                     <td colSpan={6} className="top">
@@ -432,6 +436,8 @@ const PlayerLeagues = (props) => {
                                             matchPick={props.matchPick}
                                             matchPlayer_DV={props.matchPlayer_DV}
                                             matchPlayer_Proj={props.matchPlayer_Proj}
+                                            matchPlayer_Proj_W={props.matchPlayer_Proj_W}
+                                            state={props.state}
                                         />
                                     </td>
                                 </tr>
@@ -513,6 +519,8 @@ const PlayerLeagues = (props) => {
                                             matchPlayer_DV={props.matchPlayer_DV}
                                             matchPick={props.matchPick}
                                             matchPlayer_Proj={props.matchPlayer_Proj}
+                                            matchPlayer_Proj_W={props.matchPlayer_Proj_W}
+                                            state={props.state}
                                         />
                                     </td>
                                 </tr>

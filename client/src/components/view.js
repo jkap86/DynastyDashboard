@@ -207,6 +207,7 @@ const View = (props) => {
                     matchPlayer_Proj={matchPlayer_Proj}
                     matchPlayer_Proj_W={matchPlayer_Proj_W}
                     matchPick={matchPick}
+                    state={state}
                 />
             : null
         }
@@ -218,7 +219,9 @@ const View = (props) => {
                     user={user}
                     matchPlayer_DV={matchPlayer_DV}
                     matchPlayer_Proj={matchPlayer_Proj}
+                    matchPlayer_Proj_W={matchPlayer_Proj_W}
                     matchPick={matchPick}
+                    state={state}
                 />
             : null
         }
@@ -232,6 +235,8 @@ const View = (props) => {
                     matchPlayer_DV={matchPlayer_DV}
                     matchPick={matchPick}
                     matchPlayer_Proj={matchPlayer_Proj}
+                    matchPlayer_Proj_W={matchPlayer_Proj_W}
+                    state={state}
                 />
             : null
         }
