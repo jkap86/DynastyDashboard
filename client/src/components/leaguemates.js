@@ -96,6 +96,7 @@ const Leaguemates = (props) => {
     }
 
     return <>
+        <h2>{leaguemates.filter(x => x.isLeaguemateHidden === false).length} Leaguemates</h2>
         <div className="search_wrapper">
             <Search
                 placeholder="Search Leaguemates"
