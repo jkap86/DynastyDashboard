@@ -12,6 +12,8 @@ const dv = require('./workers/workerDV')
 const leagues = require('./workers/workerLeagues')
 const transactions = require('./workers/workerTransactions')
 
+require('heroku-self-ping').default('https://ddexpress.herokuapp.com/')
+
 app.use(compression())
 app.use(cors());
 app.use(express.json());
