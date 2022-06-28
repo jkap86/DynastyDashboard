@@ -297,8 +297,9 @@ const Transactions = (props) => {
                                     />
                                 </td>
                                 <td colSpan={5} className="top">
-                                    {transaction.users.map(user =>
+                                    {transaction.users.map((user, index) =>
                                         <Roster
+                                            key={index}
                                             roster={user.roster}
                                             matchPlayer_DV={props.matchPlayer_DV}
                                             matchPick={props.matchPick}

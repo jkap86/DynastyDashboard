@@ -21,7 +21,6 @@ const TransactionLeague = (props) => {
                         <td>{scoring_settings[key].toFixed(2)}</td>
                     </tr>
                 )}
-                <br />
                 <tr>
                     <th colSpan={2}>Rushing</th>
                 </tr>
@@ -31,7 +30,6 @@ const TransactionLeague = (props) => {
                         <td>{scoring_settings[key].toFixed(2)}</td>
                     </tr>
                 )}
-                <br />
                 <tr>
                     <th colSpan={2}>Receiving</th>
                 </tr>
