@@ -5,20 +5,21 @@ const compression = require('compression')
 const cors = require('cors')
 const axios = require('axios')
 const fs = require('fs')
-const router = express.Router()
+const http = require('http');
 const projections = require('./workers/workerProjections')
 const projections_weekly = require('./workers/workerProjections_Weekly')
 const dv = require('./workers/workerDV')
 const leagues = require('./workers/workerLeagues')
 const transactions = require('./workers/workerTransactions')
 
-require('heroku-self-ping').default('https://ddexpress.herokuapp.com/')
-
 app.use(compression())
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 
+setInterval(() => {
+	http.get('https://ddexpress.herokuapp.com/');
+}, 1000 * 60 * 29)
 
 const getAllPlayers = async () => {
 	let allplayers = await axios.get('https://api.sleeper.app/v1/players/nfl', { timeout: 3000 })
