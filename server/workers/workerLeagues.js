@@ -23,7 +23,10 @@ const getDraftPicks = (league, roster_id, season, traded_picks) => {
         const index = original_picks.findIndex(obj => {
             return obj.owner_id === pick.previous_owner_id && obj.roster_id === pick.roster_id && obj.season === pick.season && obj.round === pick.round
         })
-        return original_picks.splice(index, 1)
+        if (index !== -1) {
+            return original_picks.splice(index, 1)
+        }
+
     })
 
     return league.status === 'in_season' ? original_picks.filter(x => x.season >= season + y) : original_picks
