@@ -221,7 +221,7 @@ const PlayerInfo = (props) => {
                             <th colSpan={2}>Player</th>
                             <th>Position</th>
                             <th>Team</th>
-                            <th>{tab === 'Projections' ? 'FantasyPos' : 'KTC'}</th>
+                            <th>{tab !== 'Dynasty Values' ? 'FantasyPos' : 'KTC'}</th>
                             <th>User</th>
                         </tr>
                     </tbody>
