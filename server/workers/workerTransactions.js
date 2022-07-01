@@ -54,7 +54,7 @@ const getTransactions = async (username, season) => {
             t.data.map(transaction => {
                 const traders = transaction.roster_ids.map(rid => {
                     const r = rosters.data.find(x => x.roster_id === rid)
-                    const u = users.data.find(x => x.user_id === r.owner_id)
+                    const u = users.data.find(x => x.user_id === r?.owner_id)
                     return {
                         roster_id: rid,
                         owner_id: u === undefined ? null : u.owner_id,
