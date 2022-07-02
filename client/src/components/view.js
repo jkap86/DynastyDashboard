@@ -21,28 +21,29 @@ const View = (props) => {
     const [leagues, setLeagues] = useState([]);
     const [transactions, setTransactions] = useState([])
 
+    const fetchData = async () => {
+        setIsLoading_L(true)
+        setIsLoading_T(true)
+        const l = await axios.get('/leagues', {
+            params: {
+                username: props.user.username
+            }
+        })
+        setLeagues(l.data.leagues)
+        setState(l.data.state)
+        setIsLoading_L(false)
+        const t = await axios.get('/transactions', {
+            params: {
+                username: props.user.username
+            }
+        })
+        setTransactions(t.data)
+        setIsLoading_T(false)
+    }
 
     useEffect(() => {
         setUser(props.user)
-        const fetchData = async () => {
-            setIsLoading_L(true)
-            setIsLoading_T(true)
-            const l = await axios.get('/leagues', {
-                params: {
-                    username: props.user.username
-                }
-            })
-            setLeagues(l.data.leagues)
-            setState(l.data.state)
-            setIsLoading_L(false)
-            const t = await axios.get('/transactions', {
-                params: {
-                    username: props.user.username
-                }
-            })
-            setTransactions(t.data)
-            setIsLoading_T(false)
-        }
+
         fetchData()
     }, [props.user])
 
@@ -116,9 +117,18 @@ const View = (props) => {
             className="link clickable">
             Home
         </button>
+        {
+            isLoading_L || isLoading_T ? null :
+                <button
+                    onClick={() => fetchData()}
+                    className="clickable refresh"
+                >
+                    Refresh
+                </button>
+        }
         <button
             onClick={() => setActiveTab('Player Info')}
-            className={activeTab === 'Player Info' ? 'right active' : 'right'}>
+            className={activeTab === 'Player Info' ? 'right active clickable' : 'right clickable'}>
             Player Projections/Values
         </button>
 

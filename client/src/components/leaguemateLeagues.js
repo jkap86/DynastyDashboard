@@ -138,9 +138,9 @@ const LeaguemateLeagues = (props) => {
                             <option>TE</option>
                         </select>
                         <div className="tooltip">
-                            <p>VWA</p>
+                            <p>VWAA</p>
                             <span className="tooltiptext">
-                                Value Weighted Age
+                                Value Weighted Avg Age
                             </span>
                         </div>
                     </th>
@@ -172,9 +172,9 @@ const LeaguemateLeagues = (props) => {
                             <option>TE</option>
                         </select>
                         <div className="tooltip">
-                            <p>VWA</p>
+                            <p>VWAA</p>
                             <span className="tooltiptext">
-                                Value Weighted Age
+                                Value Weighted Avg Age
                             </span>
                         </div>
                     </th>

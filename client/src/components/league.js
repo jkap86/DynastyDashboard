@@ -139,7 +139,12 @@ const League = (props) => {
                             <option>WR</option>
                             <option>TE</option>
                         </select>
-                        <p className="clickable" onClick={() => sort('Age')}>VWAA</p>
+                        <div className="tooltip">
+                            <p className="clickable" onClick={() => sort('Age')}>VWAA</p>
+                            <span className="tooltiptext">
+                                Value Weighted Avg Age
+                            </span>
+                        </div>
                     </th>
                     <th>
                         <select value={group_rank} onChange={(e) => setGroup_rank(e.target.value)}>

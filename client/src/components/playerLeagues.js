@@ -274,7 +274,7 @@ const PlayerLeagues = (props) => {
                                 <option>TE</option>
                             </select>
                             <div className="tooltip">
-                                <p onClick={() => sort('VWA')}>VWA</p>
+                                <p onClick={() => sort('VWA')}>VWAA</p>
                                 <span className="tooltiptext">
                                     Value Weighted Avg Age
                                 </span>
@@ -373,7 +373,7 @@ const PlayerLeagues = (props) => {
                                 <option>TE</option>
                             </select>
                             <div className="tooltip">
-                                <p onClick={() => sort('VWA')}>VWA</p>
+                                <p onClick={() => sort('VWA')}>VWAA</p>
                                 <span className="tooltiptext">
                                     Value Weighted Avg Age
                                 </span>
@@ -480,7 +480,7 @@ const PlayerLeagues = (props) => {
                                 <option>TE</option>
                             </select>
                             <div className="tooltip">
-                                <p onClick={() => sort('VWA')}>VWA</p>
+                                <p onClick={() => sort('VWA')}>VWAA</p>
                                 <span className="tooltiptext">
                                     Value Weighted Avg Age
                                 </span>
