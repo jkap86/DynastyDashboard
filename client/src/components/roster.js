@@ -177,7 +177,10 @@ const Roster = (props) => {
                                                             {props.matchPick(pick.season, pick.round)}
                                                         </em>
                                                     </td>
-                                                    <td>{pick.season} Round {pick.round}</td>
+                                                    <td className="left">
+                                                        {pick.season} Round {pick.round}
+                                                        {pick.original_username === props.roster.username ? null : <em> ({pick.original_username})</em>}
+                                                    </td>
                                                 </tr>
                                             )}
                                         </tbody>

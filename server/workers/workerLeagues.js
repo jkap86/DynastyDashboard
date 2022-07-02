@@ -2,9 +2,11 @@ const express = require('express')
 const router = express.Router()
 const axios = require('axios')
 
-const getDraftPicks = (league, roster_id, season, traded_picks) => {
+const getDraftPicks = (league, roster_id, season, traded_picks, rosters, users) => {
     let original_picks = []
     let y = league.status === 'in_season' ? 1 : 0
+    const r = rosters.find(x => x.roster_id === roster_id)
+    const u = users.find(x => x.user_id === r?.owner_id)
     Array.from(Array(3).keys()).map(x => x + y).map(year => {
         return Array.from(Array(league.settings.draft_rounds).keys()).map(x => x + 1).map(round => {
             return original_picks.push({
@@ -12,12 +14,18 @@ const getDraftPicks = (league, roster_id, season, traded_picks) => {
                 round: round,
                 roster_id: roster_id,
                 previous_owner_id: roster_id,
-                owner_id: roster_id
+                owner_id: roster_id,
+                original_username: u ? u.display_name : 'Orphan'
             })
         })
     })
     traded_picks.filter(x => x.owner_id === roster_id).map(pick => {
-        return original_picks.push(pick)
+        const r = rosters.find(x => x.roster_id === pick.roster_id)
+        const u = users.find(x => x.user_id === r?.owner_id)
+        return original_picks.push({
+            ...pick,
+            original_username: u ? u.display_name : 'Orphan'
+        })
     })
     traded_picks.filter(x => x.previous_owner_id === roster_id).map(pick => {
         const index = original_picks.findIndex(obj => {
@@ -66,7 +74,7 @@ const getLeagues = async (username, season, week) => {
                 winpct: wins + losses + ties > 0 ? wins / (wins + losses + ties) : 0,
                 fpts: parseFloat(`${roster.settings.fpts}.${roster.settings.fpts_decimal === undefined ? 0 : roster.settings.fpts_decimal}`),
                 fpts_against: parseFloat(`${roster.settings.fpts_against === undefined ? 0 : roster.settings.fpts_against}.${roster.settings.fpts_against_decimal === undefined ? 0 : roster.settings.fpts_against_decimal}`),
-                draft_picks: league.settings.type === 2 ? getDraftPicks(league, roster.roster_id, season, traded_picks.data) : []
+                draft_picks: league.settings.type === 2 ? getDraftPicks(league, roster.roster_id, season, traded_picks.data, rosters.data, users.data) : []
             }
         })
         const userRoster = rosters.data.find(x => x.owner_id === user.data.user_id || (x.co_owners !== null && x.co_owners !== undefined && x.co_owners.includes(user.data.user_id)))

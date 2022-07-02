@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 
 setInterval(() => {
-	http.get('https://dynastydashboard.herokuapp.com/');
+	http.get('http://dynastydashboard.herokuapp.com/');
 }, 1000 * 60 * 29)
 
 const getAllPlayers = async () => {
