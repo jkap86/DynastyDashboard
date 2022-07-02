@@ -5,6 +5,7 @@ import LineupLeagues from "./lineupLeagues";
 import player_default from '../player_default.png';
 
 const Lineups = (props) => {
+    const [proj_type, setProj_type] = useState('Weekly')
     const [players, setPlayers] = useState([])
     const [filters, setFilters] = useState({ positions: [], types: [] })
     const [sortToggle, setSortToggle] = useState(false)
@@ -140,8 +141,13 @@ const Lineups = (props) => {
                     : p.sort((a, b) => props.matchPlayer_DV(b.id) - props.matchPlayer_DV(a.id))
                 break;
             case 'Projection':
-                p = t ? p.sort((a, b) => props.matchPlayer_Proj(a.id) - props.matchPlayer_Proj(b.id))
-                    : p.sort((a, b) => props.matchPlayer_Proj(b.id) - props.matchPlayer_Proj(a.id))
+                if (proj_type === 'ROS') {
+                    p = t ? p.sort((a, b) => props.matchPlayer_Proj(a.id) - props.matchPlayer_Proj(b.id))
+                        : p.sort((a, b) => props.matchPlayer_Proj(b.id) - props.matchPlayer_Proj(a.id))
+                } else {
+                    p = t ? p.sort((a, b) => props.matchPlayer_Proj_W(a.id) - props.matchPlayer_Proj_W(b.id))
+                        : p.sort((a, b) => props.matchPlayer_Proj_W(b.id) - props.matchPlayer_Proj_W(a.id))
+                }
                 break;
         }
         SetPage(1)
@@ -209,7 +215,13 @@ const Lineups = (props) => {
                             <p onClick={() => sort('PF')}>PF</p> - <p onClick={() => sort('PA')}>PA</p>
                         </th>
                         <th className="clickable" onClick={() => sort('Value')}>Value</th>
-                        <th className="clickable" onClick={() => sort('Projection')}>Proj</th>
+                        <th>
+                            <select onChange={(e) => setProj_type(e.target.value)}>
+                                <option>Week {props.state.week}</option>
+                                <option>ROS</option>
+                            </select>
+                            <p className="clickable" onClick={() => sort('Projection')}>Proj</p>
+                        </th>
                     </tr>
                 </tbody>
                 <tbody className="slide_up">
@@ -266,7 +278,9 @@ const Lineups = (props) => {
                                         </em>
                                     </td>
                                     <td>
-                                        {props.matchPlayer_Proj(player.id)}
+                                        {
+                                            proj_type === 'ROS' ? props.matchPlayer_Proj(player.id) : props.matchPlayer_Proj_W(player.id)
+                                        }
                                     </td>
                                 </tr>
                                 {player.isLeaguesHidden ? null :

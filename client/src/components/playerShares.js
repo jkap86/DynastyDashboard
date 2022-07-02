@@ -6,6 +6,7 @@ import PlayerLeagues from "./playerLeagues";
 import Lineups from "./lineups";
 
 const PlayerShares = (props) => {
+    const [proj_type, setProj_type] = useState('ROS')
     const [tab, setTab] = useState('All')
     const [players, setPlayers] = useState([])
     const [filters, setFilters] = useState({ positions: [], types: [] })
@@ -183,8 +184,13 @@ const PlayerShares = (props) => {
                     : p.sort((a, b) => parseInt(props.matchPlayer_DV(b.id)) - parseInt(props.matchPlayer_DV(a.id)))
                 break;
             case 'Projection':
-                p = t ? p.sort((a, b) => parseFloat(props.matchPlayer_Proj(a.id)) - parseFloat(props.matchPlayer_Proj(b.id)))
-                    : p.sort((a, b) => parseFloat(props.matchPlayer_Proj(b.id)) - parseFloat(props.matchPlayer_Proj(a.id)))
+                if (proj_type === 'ROS') {
+                    p = t ? p.sort((a, b) => parseFloat(props.matchPlayer_Proj(a.id)) - parseFloat(props.matchPlayer_Proj(b.id)))
+                        : p.sort((a, b) => parseFloat(props.matchPlayer_Proj(b.id)) - parseFloat(props.matchPlayer_Proj(a.id)))
+                } else {
+                    p = t ? p.sort((a, b) => parseFloat(props.matchPlayer_Proj_W(a.id)) - parseFloat(props.matchPlayer_Proj_W(b.id)))
+                        : p.sort((a, b) => parseFloat(props.matchPlayer_Proj_W(b.id)) - parseFloat(props.matchPlayer_Proj_W(a.id)))
+                }
                 break;
             default:
                 p = p.sort((a, b) => b.count - a.count)
@@ -269,7 +275,13 @@ const PlayerShares = (props) => {
                                 <th colSpan={3} className="clickable" onClick={() => sort('Record')}>Record</th>
                                 <th colSpan={2}>FP</th>
                                 <th colSpan={2} className="clickable" onClick={() => sort('Value')}>Value</th>
-                                <th colSpan={2} className="clickable" onClick={() => sort('Projection')}>Proj</th>
+                                <th colSpan={2}>
+                                    <select onChange={(e) => setProj_type(e.target.value)}>
+                                        <option>ROS</option>
+                                        <option>Week {props.state.week}</option>
+                                    </select>
+                                    <p className="clickable" onClick={() => sort('Projection')}>Proj</p>
+                                </th>
                             </tr>
                         </tbody>
                         <tbody className="slide_up">
@@ -304,7 +316,11 @@ const PlayerShares = (props) => {
                                                     {props.matchPlayer_DV(player.id)}
                                                 </em>
                                             </td>
-                                            <td colSpan={2}>{props.matchPlayer_Proj(player.id)}</td>
+                                            <td colSpan={2}>
+                                                {
+                                                    proj_type === 'ROS' ? props.matchPlayer_Proj(player.id) : props.matchPlayer_Proj_W(player.id)
+                                                }
+                                            </td>
                                         </tr>
                                         {player.isLeaguesHidden ? null :
                                             <tr>
@@ -338,6 +354,7 @@ const PlayerShares = (props) => {
                 matchPlayer_Proj_W={props.matchPlayer_Proj_W}
                 tab={tab}
                 user={props.user}
+                state={props.state}
             />
         }
     </>
