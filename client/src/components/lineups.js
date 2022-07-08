@@ -268,7 +268,7 @@ const Lineups = (props) => {
                                         </p>
                                         &nbsp;{
                                             player.wins + player.losses + player.ties === 0 ? null :
-                                                <em>{(player.wins / (player.wins + player.losses + player.ties)).toFixed(4)}</em>
+                                                <em>{(player.wins / (player.wins + player.losses)).toFixed(4)}</em>
                                         }
                                     </td>
                                     <td colSpan={2}>{player.fpts} - {player.fpts_against}</td>

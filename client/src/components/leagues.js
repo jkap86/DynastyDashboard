@@ -144,6 +144,9 @@ const Leagues = (props) => {
                 case 'TE':
                     v = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
                     break;
+                case 'FLEX':
+                    v = roster.players.filter(x => ['RB', 'WR', 'TE'].includes(allPlayers[x].position)).reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
+                    break;
                 default:
                     v = 0
                     break;
@@ -218,7 +221,7 @@ const Leagues = (props) => {
     const total_wins = leagues.filter(x => x.isLeagueHidden === false).reduce((acc, cur) => acc + cur.record.wins, 0)
     const total_losses = leagues.filter(x => x.isLeagueHidden === false).reduce((acc, cur) => acc + cur.record.losses, 0)
     const total_ties = leagues.filter(x => x.isLeagueHidden === false).reduce((acc, cur) => acc + cur.record.ties, 0)
-    const win_pct = total_wins + total_losses > 0 ? total_wins / (total_wins + total_losses + total_ties) : 0
+    const win_pct = total_wins + total_losses > 0 ? total_wins / (total_wins + total_losses) : 0
 
     return <>
         <div className="search_wrapper">
@@ -250,6 +253,7 @@ const Leagues = (props) => {
                                 <option>RB</option>
                                 <option>WR</option>
                                 <option>TE</option>
+                                <option>FLEX</option>
                             </select>
                             <div className="tooltip">
                                 <p className="clickable" onClick={() => sort('Age')}>VWAA</p>
@@ -282,6 +286,7 @@ const Leagues = (props) => {
                                 <option>RB</option>
                                 <option>WR</option>
                                 <option>TE</option>
+                                <option>FLEX</option>
                             </select>
                             <p className="clickable" onClick={() => sort('Value')}>Value</p>
                         </th>

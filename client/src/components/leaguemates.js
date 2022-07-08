@@ -151,7 +151,7 @@ const Leaguemates = (props) => {
                                 <td>{leaguemate.fpts} - {leaguemate.fpts_against}</td>
                                 <td>
                                     {leaguemate.user_wins}-{leaguemate.user_losses}{leaguemate.user_ties === 0 ? null : `-${leaguemate.user_ties}`} {leaguemate.user_wins + leaguemate.user_losses + leaguemate.user_losses === 0 ? null :
-                                        <em>{(leaguemate.user_wins / (leaguemate.user_wins + leaguemate.user_losses + leaguemate.user_ties)).toFixed(4)}</em>
+                                        <em>{(leaguemate.user_wins / (leaguemate.user_wins + leaguemate.user_losses)).toFixed(4)}</em>
                                     }
                                 </td>
                                 <td>{leaguemate.fpts} - {leaguemate.fpts_against}</td>

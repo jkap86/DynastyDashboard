@@ -143,7 +143,11 @@ const View = (props) => {
                 <p className="image">{user.display_name}</p>
             </div>
         </h2>
-        <h2>{state.season} Week {state.week}</h2>
+        <h2>
+            {isLoading_L ? null :
+                `${state.season} ${state.week === 0 ? 'Preseason' : `Week ${state.week}`}`
+            }
+        </h2>
         <div className="nav_container">
             <button
                 onClick={() => setActiveTab('Leagues')}

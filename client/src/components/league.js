@@ -170,6 +170,7 @@ const League = (props) => {
                             <option>RB</option>
                             <option>WR</option>
                             <option>TE</option>
+                            <option>FLEX</option>
                         </select>
                         <p className="clickable" onClick={() => sort('Value')}>Value</p>
                     </th>
