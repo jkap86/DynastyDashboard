@@ -95,7 +95,7 @@ const LineupLeagues = (props) => {
                                     {league.matchup === undefined ? null :
                                         <Breakdown
                                             starters={league.matchup_opponent.starters}
-                                            bench={league.matchup_opponent.players.filter(x => !league.matchup.starters.includes(x))}
+                                            bench={league.matchup_opponent.players.filter(x => !league.matchup_opponent.starters.includes(x))}
                                             players_points={league.matchup_opponent.players_points}
                                             username={league.opponent.username}
                                             matchPlayer_Proj_W={props.matchPlayer_Proj_W}
