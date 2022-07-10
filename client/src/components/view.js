@@ -7,6 +7,7 @@ import PlayerShares from "./playerShares";
 import Leaguemates from "./leaguemates";
 import Transactions from "./transactions";
 import emoji from '../emoji.png';
+import allPlayers from '../allPlayers.json';
 
 const View = (props) => {
     const [state, setState] = useState({})
@@ -20,6 +21,9 @@ const View = (props) => {
     const [dv, setDv] = useState([]);
     const [leagues, setLeagues] = useState([]);
     const [transactions, setTransactions] = useState([])
+    const [group_age, setGroup_age] = useState('Total')
+    const [group_rank, setGroup_rank] = useState('Total')
+    const [group_value, setGroup_value] = useState('Total')
 
     const fetchData = async () => {
         setIsLoading_L(true)
@@ -29,7 +33,14 @@ const View = (props) => {
                 username: props.user.username
             }
         })
-        setLeagues(l.data.leagues)
+        const l_updated = l.data.leagues.map(league => {
+            const match = leagues.find(x => league.league_id === x.league_id)
+            return {
+                ...league,
+                isLeagueTypeHidden: match ? match.isLeagueTypeHidden : false
+            }
+        })
+        setLeagues(l_updated)
         setState(l.data.state)
         setIsLoading_L(false)
         const t = await axios.get('/transactions', {
@@ -109,6 +120,189 @@ const View = (props) => {
         let value = dv.find(x => `${season}mid${round}` === x.searchName.slice(0, 8))
         value = value === undefined ? 0 : value.value
         return value
+    }
+
+    const getAge = (roster) => {
+        let a;
+        let length;
+        if (roster.players !== null) {
+            switch (group_age) {
+                case 'Total':
+                    a = roster.players.filter(x => allPlayers[x].age !== undefined).reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(matchPlayer_DV(cur)), 0)
+                    length = roster.players.filter(x => allPlayers[x].age !== undefined).reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'Starters':
+                    a = roster.starters.filter(x => x !== '0' && allPlayers[x].age !== undefined).reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(matchPlayer_DV(cur)), 0)
+                    length = roster.starters.filter(x => x !== '0' && allPlayers[x].age !== undefined).reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'Bench':
+                    a = roster.players.filter(x => !roster.starters.includes(x) && allPlayers[x].age !== undefined).reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(matchPlayer_DV(cur)), 0)
+                    length = roster.players.filter(x => !roster.starters.includes(x) && allPlayers[x].age !== undefined).reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'QB':
+                    a = roster.players.filter(x => allPlayers[x].age !== undefined && allPlayers[x].position === 'QB').reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(matchPlayer_DV(cur)), 0)
+                    length = roster.players.filter(x => allPlayers[x].age !== undefined && allPlayers[x].position === 'QB').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'RB':
+                    a = roster.players.filter(x => allPlayers[x].age !== undefined && allPlayers[x].position === 'RB').reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(matchPlayer_DV(cur)), 0)
+                    length = roster.players.filter(x => allPlayers[x].age !== undefined && allPlayers[x].position === 'RB').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'WR':
+                    a = roster.players.filter(x => allPlayers[x].age !== undefined && allPlayers[x].position === 'WR').reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(matchPlayer_DV(cur)), 0)
+                    length = roster.players.filter(x => allPlayers[x].age !== undefined && allPlayers[x].position === 'WR').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'TE':
+                    a = roster.players.filter(x => allPlayers[x].age !== undefined && allPlayers[x].position === 'TE').reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(matchPlayer_DV(cur)), 0)
+                    length = roster.players.filter(x => allPlayers[x].age !== undefined && allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'FLEX':
+                    a = roster.players.filter(x => allPlayers[x].age !== undefined && ['RB', 'WR', 'TE'].includes(allPlayers[x].position)).reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(matchPlayer_DV(cur)), 0)
+                    length = roster.players.filter(x => allPlayers[x].age !== undefined && ['RB', 'WR', 'TE'].includes(allPlayers[x].position)).reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            length = 0
+        }
+        return length === 0 ? '-' : (a / length).toFixed(1)
+    }
+
+    const getRank = (league, roster) => {
+        let p;
+        if (roster ? roster.players !== null : league.userRoster.players !== null) {
+            let standings = league.rosters.map(roster => {
+                if (roster.players !== null) {
+                    let proj;
+                    switch (group_rank) {
+                        case 'Total':
+                            proj = roster.players.reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                            break;
+                        case 'Starters':
+                            proj = roster.starters.filter(x => x !== '0').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                            break;
+                        case 'Bench':
+                            proj = roster.players.filter(x => !roster.starters.includes(x)).reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                            break;
+                        case 'QB':
+                            proj = roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                            break;
+                        case 'RB':
+                            proj = roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                            break;
+                        case 'WR':
+                            proj = roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                            break;
+                        case 'TE':
+                            proj = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                            break;
+                        case 'FLEX':
+                            proj = roster.players.filter(x => ['RB', 'WR', 'TE'].includes(allPlayers[x].position)).reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                            break;
+                        case `Week ${state.week}`:
+                            proj = roster.starters.filter(x => x !== '0').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj_W(cur)), 0)
+                            break;
+                    }
+                    return {
+                        ...roster,
+                        proj: proj
+                    }
+                } else {
+                    p = '-'
+                }
+            }).sort((a, b) => b.proj - a.proj)
+            p = standings.findIndex(obj => {
+                return obj.roster_id === league.userRoster.roster_id
+            }) + 1
+        } else {
+            p = '-'
+        }
+        return `${p} / ${league.rosters.length}`
+    }
+
+    const getValue = (roster) => {
+        let v;
+        if (roster.players !== null) {
+            switch (group_value) {
+                case 'Total':
+                    v = roster.players.reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0) +
+                        roster.draft_picks.reduce((acc, cur) => acc + parseInt(matchPick(cur.season, cur.round)), 0)
+                    break;
+                case 'Roster':
+                    v = roster.players.reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'Picks':
+                    v = roster.draft_picks.reduce((acc, cur) => acc + parseInt(matchPick(cur.season, cur.round)), 0)
+                    break;
+                case 'Starters':
+                    v = roster.starters.reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'Bench':
+                    v = roster.players.filter(x => !roster.starters.includes(x)).reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'QB':
+                    v = roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'RB':
+                    v = roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'WR':
+                    v = roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'TE':
+                    v = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                case 'FLEX':
+                    v = roster.players.filter(x => ['RB', 'WR', 'TE'].includes(allPlayers[x].position)).reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                    break;
+                default:
+                    v = 0
+                    break;
+            }
+        } else {
+            v = 0
+        }
+        return v
+    }
+
+    const getProj = (roster) => {
+        let p;
+        if (roster.players !== null) {
+            switch (group_rank) {
+                case 'Total':
+                    p = roster.players.reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                    break;
+                case 'Starters':
+                    p = roster.starters.reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                    break;
+                case 'Bench':
+                    p = roster.players.filter(x => !roster.starters.includes(x)).reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                    break;
+                case 'QB':
+                    p = roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                    break;
+                case 'RB':
+                    p = roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                    break;
+                case 'WR':
+                    p = roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                    break;
+                case 'TE':
+                    p = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                    break;
+                case 'FLEX':
+                    p = roster.players.filter(x => ['RB', 'WR', 'TE'].includes(allPlayers[x].position)).reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
+                    break;
+                case `Week ${state.week}`:
+                    p = roster.starters.reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj_W(cur)), 0)
+                    break;
+                default:
+                    p = 0
+            }
+        } else {
+            p = 0
+        }
+        return p
     }
 
     return <>
@@ -207,7 +401,17 @@ const View = (props) => {
                     matchPick={matchPick}
                     matchPlayer_Proj={matchPlayer_Proj}
                     matchPlayer_Proj_W={matchPlayer_Proj_W}
+                    getAge={getAge}
+                    getRank={getRank}
+                    getValue={getValue}
+                    getProj={getProj}
+                    group_age={group_age}
+                    group_rank={group_rank}
+                    group_value={group_value}
                     state={state}
+                    sendGroupAge={(data) => setGroup_age(data)}
+                    sendGroupRank={(data) => setGroup_rank(data)}
+                    sendGroupValue={(data) => setGroup_value(data)}
                 />
             : null
         }

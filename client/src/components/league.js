@@ -4,77 +4,13 @@ import Roster from "./roster";
 import allPlayers from '../allPlayers.json';
 
 const League = (props) => {
-    const [group_age, setGroup_age] = useState(props.group_age)
-    const [group_rank, setGroup_rank] = useState(props.group_rank)
-    const [group_value, setGroup_value] = useState(props.group_value)
     const [rosters, setRosters] = useState([])
     const [sortBy, setSortBy] = useState('index')
     const [sortToggle, setSortToggle] = useState(false)
 
     useEffect(() => {
         setRosters(props.league.rosters.sort((a, b) => parseFloat(b.winpct) - parseFloat(a.winpct)))
-    }, [props.league])
-
-    useEffect(() => {
-        props.sendGroupValue(group_value)
-    }, [group_value])
-
-    useEffect(() => {
-        setGroup_value(props.group_value)
-    }, [props.group_value])
-
-    useEffect(() => {
-        props.sendGroupAge(group_age)
-    }, [group_age])
-
-    useEffect(() => {
-        setGroup_age(props.group_age)
-    }, [props.group_age])
-
-    useEffect(() => {
-        props.sendGroupRank(group_rank)
-    }, [group_rank])
-
-    useEffect(() => {
-        setGroup_rank(props.group_rank)
-    }, [props.group_rank])
-
-    const getProj = (roster) => {
-        let p;
-        if (roster.players !== null) {
-            switch (group_rank) {
-                case 'Total':
-                    p = roster.players.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                    break;
-                case 'Starters':
-                    p = roster.starters.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                    break;
-                case 'Bench':
-                    p = roster.players.filter(x => !roster.starters.includes(x)).reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                    break;
-                case 'QB':
-                    p = roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                    break;
-                case 'RB':
-                    p = roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                    break;
-                case 'WR':
-                    p = roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                    break;
-                case 'TE':
-                    p = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                    break;
-                case `Week ${props.state.week}`:
-                    p = roster.starters.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj_W(cur)), 0)
-                    break;
-                default:
-                    p = 0
-            }
-        } else {
-            p = 0
-        }
-        return p
-    }
+    }, [props])
 
     const sort = (sort_by) => {
         const t = sortToggle
@@ -99,7 +35,7 @@ const League = (props) => {
                     r.sort((a, b) => a.settings.fpts_against - b.settings.fpts_against || a.settings.fpts_against_decimal - b.settings.fpts_against_decimal)
                 break;
             case 'Projection':
-                r = t ? r.sort((a, b) => getProj(a) - getProj(b)) : r.sort((a, b) => getProj(b) - getProj(a))
+                r = t ? r.sort((a, b) => props.getProj(a) - props.getProj(b)) : r.sort((a, b) => props.getProj(b) - props.getProj(a))
                 break;
             case 'Value':
                 r = t ? r.sort((a, b) => props.getValue(a) - props.getValue(b)) : r.sort((a, b) => props.getValue(b) - props.getValue(a))
@@ -130,7 +66,7 @@ const League = (props) => {
                     <th>Record</th>
                     <th>FP</th>
                     <th>
-                        <select value={group_age} onChange={(e) => setGroup_age(e.target.value)}>
+                        <select value={props.group_age} onChange={(e) => props.sendGroupAge(e.target.value)}>
                             <option>Total</option>
                             <option>Starters</option>
                             <option>Bench</option>
@@ -138,6 +74,7 @@ const League = (props) => {
                             <option>RB</option>
                             <option>WR</option>
                             <option>TE</option>
+                            <option>FLEX</option>
                         </select>
                         <div className="tooltip">
                             <p className="clickable" onClick={() => sort('Age')}>VWAA</p>
@@ -147,7 +84,7 @@ const League = (props) => {
                         </div>
                     </th>
                     <th>
-                        <select value={group_rank} onChange={(e) => setGroup_rank(e.target.value)}>
+                        <select value={props.group_rank} onChange={(e) => props.sendGroupRank(e.target.value)}>
                             <option>Total</option>
                             <option>Starters</option>
                             <option>Bench</option>
@@ -155,12 +92,13 @@ const League = (props) => {
                             <option>RB</option>
                             <option>WR</option>
                             <option>TE</option>
+                            <option>FLEX</option>
                             <option>Week {props.state.week}</option>
                         </select>
                         <p className="clickable" onClick={() => sort('Projection')}>Proj</p>
                     </th>
                     <th>
-                        <select value={group_value} onChange={(e) => setGroup_value(e.target.value)}>
+                        <select value={props.group_value} onChange={(e) => props.sendGroupValue(e.target.value)}>
                             <option>Total</option>
                             <option>Roster</option>
                             <option>Picks</option>
@@ -201,7 +139,7 @@ const League = (props) => {
                                 {props.getAge(roster)}
                             </td>
                             <td>
-                                {getProj(roster).toLocaleString("en-US")}
+                                {props.getProj(roster).toLocaleString("en-US")}
                             </td>
                             <td>
                                 {props.getValue(roster).toLocaleString("en-US")}
