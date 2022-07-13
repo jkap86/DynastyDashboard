@@ -77,7 +77,7 @@ const getLeagues = async (username, season, week) => {
                 draft_picks: league.settings.type === 2 ? getDraftPicks(league, roster.roster_id, season, traded_picks.data, rosters.data, users.data) : []
             }
         })
-        const userRoster = rosters.data.find(x => x.owner_id === user.data.user_id || (x.co_owners !== null && x.co_owners !== undefined && x.co_owners.includes(user.data.user_id)))
+        const userRoster = rosters.data?.find(x => x.owner_id === user.data.user_id || (x.co_owners !== null && x.co_owners !== undefined && x.co_owners.includes(user.data.user_id)))
 
         if (userRoster !== undefined) {
             const matchup = matchups.data.find(x => x.roster_id === userRoster.roster_id)
