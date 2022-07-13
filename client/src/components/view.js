@@ -119,8 +119,10 @@ const View = (props) => {
         })
         setTransactions(t.data)
         setIsLoading_T(false)
+    }
 
-        let playersOwned = l_updated.map(league => {
+    useEffect(() => {
+        let playersOwned = leagues.filter(x => x.isLeagueTypeHidden === false).map(league => {
             return league.rosters.filter(x => x.players !== null && x.owner_id === props.user.user_id).map(roster => {
                 return roster.players.map(player => {
                     return {
@@ -135,7 +137,7 @@ const View = (props) => {
                 })
             })
         }).flat(2)
-        let playersTaken = l_updated.map(league => {
+        let playersTaken = leagues.filter(x => x.isLeagueTypeHidden === false).map(league => {
             return league.rosters.filter(x => x.players !== null && x.owner_id !== props.user.user_id).map(roster => {
                 return roster.players.map(player => {
                     return {
@@ -152,7 +154,7 @@ const View = (props) => {
         }).flat(2)
         const p = getPlayerShares(playersOwned, playersTaken)
         setPlayers(p.filter(x => x.leagues_owned.length + x.leagues_taken.length > 0).sort((a, b) => b.count - a.count))
-    }
+    }, [props.user, filters])
 
     useEffect(() => {
         setUser(props.user)
