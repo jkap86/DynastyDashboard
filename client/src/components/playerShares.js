@@ -14,107 +14,12 @@ const PlayerShares = (props) => {
     const [sortToggle, setSortToggle] = useState(false)
     const [page, SetPage] = useState(1)
 
-    const findOccurrences = (players) => {
-        const ps = []
-        players.forEach(p => {
-            const index = ps.findIndex(obj => {
-                return obj.id === p.id
-            })
-            if (index === -1) {
-                ps.push({
-                    id: p.id,
-                    position: p.id === '0' || allPlayers[p.id] === undefined ? null : ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[p.id].position) ? allPlayers[p.id].position : 'Other',
-                    type: p.id === '0' || allPlayers[p.id] === undefined ? null : allPlayers[p.id].years_exp === 0 ? 'R' : 'V',
-                    count: 1,
-                    leagues: [p.league],
-                    wins: p.wins,
-                    losses: p.losses,
-                    ties: p.ties,
-                    fpts: p.fpts,
-                    fpts_against: p.fpts_against,
-                    isLeaguesHidden: true,
-                    isPlayerHidden: false
-                })
-            } else {
-                ps[index].count++
-                if (!ps[index].leagues.includes(p.league)) {
-                    ps[index].leagues.push(p.league)
-                }
-                ps[index].wins = ps[index].wins + p.wins
-                ps[index].losses = ps[index].losses + p.losses
-                ps[index].ties = ps[index].ties + p.ties
-                ps[index].fpts = ps[index].fpts + p.fpts
-                ps[index].fpts_against = ps[index].fpts_against + p.fpts_against
-            }
-        })
-        return ps
-    }
 
-    const getPlayerShares = (players_owned, players_taken) => {
-        const po = findOccurrences(players_owned)
-        const pt = findOccurrences(players_taken)
-        let ap = Object.keys(allPlayers).filter(x => allPlayers[x].status === 'Active').map(player => {
-            const match_owned = po.find(x => x.id === player)
-            const leagues_owned = match_owned === undefined ? [] : match_owned.leagues
-            const match_taken = pt.find(x => x.id === player)
-            const leagues_taken = match_taken === undefined ? [] : match_taken.leagues
-            const leagues_available = props.leagues.filter(x => leagues_owned.find(y => y.league_id === x.league_id) === undefined &&
-                leagues_taken.find(y => y.league_id === x.league_id) === undefined)
-            return {
-                id: player,
-                position: ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[player].position) ? allPlayers[player].position : 'Other',
-                type: allPlayers[player].years_exp === 0 ? 'R' : 'V',
-                leagues_owned: leagues_owned,
-                leagues_taken: leagues_taken,
-                leagues_available: leagues_available,
-                count: match_owned === undefined ? 0 : match_owned.count,
-                wins: match_owned === undefined ? 0 : match_owned.wins,
-                losses: match_owned === undefined ? 0 : match_owned.losses,
-                ties: match_owned === undefined ? 0 : match_owned.ties,
-                fpts: match_owned === undefined ? 0 : match_owned.fpts,
-                fpts_against: match_owned === undefined ? 0 : match_owned.fpts_against,
-                isPlayerHidden: false,
-                isLeaguesHidden: true,
-            }
-        })
-        return ap
-    }
 
     useEffect(() => {
-        let playersOwned = props.leagues.map(league => {
-            return league.rosters.filter(x => x.players !== null && x.owner_id === props.user.user_id).map(roster => {
-                return roster.players.map(player => {
-                    return {
-                        id: player,
-                        league: league,
-                        wins: league.record.wins,
-                        losses: league.record.losses,
-                        ties: league.record.ties,
-                        fpts: league.fpts,
-                        fpts_against: league.fpts_against
-                    }
-                })
-            })
-        }).flat(2)
-        let playersTaken = props.leagues.map(league => {
-            return league.rosters.filter(x => x.players !== null && x.owner_id !== props.user.user_id).map(roster => {
-                return roster.players.map(player => {
-                    return {
-                        id: player,
-                        league: league,
-                        wins: league.record.wins,
-                        losses: league.record.losses,
-                        ties: league.record.ties,
-                        fpts: league.fpts,
-                        fpts_against: league.fpts_against
-                    }
-                })
-            })
-        }).flat(2)
-        const p = getPlayerShares(playersOwned, playersTaken)
-        setPlayers(p.filter(x => x.leagues_owned.length + x.leagues_taken.length > 0).sort((a, b) => b.count - a.count))
+        setPlayers(props.players)
 
-    }, [props.leagues])
+    }, [props])
 
     const filterPosition = (e) => {
         let f = filters.positions
@@ -335,6 +240,15 @@ const PlayerShares = (props) => {
                                                         matchPick={props.matchPick}
                                                         player={player.id}
                                                         state={props.state}
+                                                        getAge={props.getAge}
+                                                        getRank={props.getRank}
+                                                        getValue={props.getValue}
+                                                        group_age={props.group_age}
+                                                        group_rank={props.group_rank}
+                                                        group_value={props.group_value}
+                                                        sendGroupAge={(data) => props.sendGroupAge(data)}
+                                                        sendGroupRank={(data) => props.sendGroupRank(data)}
+                                                        sendGroupValue={(data) => props.sendGroupValue(data)}
                                                     />
                                                 </td>
                                             </tr>
@@ -347,7 +261,7 @@ const PlayerShares = (props) => {
             </React.Fragment>
             :
             <Lineups
-                findOccurrences={findOccurrences}
+                findOccurrences={props.findOccurrences}
                 leagues={props.leagues}
                 matchPlayer_DV={props.matchPlayer_DV}
                 matchPlayer_Proj={props.matchPlayer_Proj}

@@ -52,7 +52,7 @@ const getLeagues = async (username, season, week) => {
             await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/matchups/${Math.max(week, 1)}`).catch((err) => console.log(err)),
             await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/traded_picks`).catch((err) => console.log(err))
         ])
-        rosters.data = rosters.data.map(roster => {
+        rosters.data = rosters.data?.map(roster => {
             const roster_user = users.data.find(x => x.user_id === roster.owner_id)
             const wins = week < 1 ? roster.metadata === null || roster.metadata.record === undefined || roster.metadata.record.match(/W/g) === null ?
                 0 : roster.metadata.record.match(/W/g).length

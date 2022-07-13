@@ -8,6 +8,7 @@ import Leaguemates from "./leaguemates";
 import Transactions from "./transactions";
 import emoji from '../emoji.png';
 import allPlayers from '../allPlayers.json';
+import { getOptimalProjection } from './optimalProjection';
 
 const View = (props) => {
     const [state, setState] = useState({})
@@ -20,10 +21,78 @@ const View = (props) => {
     const [projections_weekly, setProjections_weekly] = useState([])
     const [dv, setDv] = useState([]);
     const [leagues, setLeagues] = useState([]);
+    const [players, setPlayers] = useState([])
     const [transactions, setTransactions] = useState([])
     const [group_age, setGroup_age] = useState('Total')
-    const [group_rank, setGroup_rank] = useState('Total')
+    const [group_rank, setGroup_rank] = useState('Optimal')
     const [group_value, setGroup_value] = useState('Total')
+
+
+    const findOccurrences = (players) => {
+        const ps = []
+        players.forEach(p => {
+            const index = ps.findIndex(obj => {
+                return obj.id === p.id
+            })
+            if (index === -1) {
+                ps.push({
+                    id: p.id,
+                    position: p.id === '0' || allPlayers[p.id] === undefined ? null : ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[p.id].position) ? allPlayers[p.id].position : 'Other',
+                    type: p.id === '0' || allPlayers[p.id] === undefined ? null : allPlayers[p.id].years_exp === 0 ? 'R' : 'V',
+                    count: 1,
+                    leagues: [p.league],
+                    wins: p.wins,
+                    losses: p.losses,
+                    ties: p.ties,
+                    fpts: p.fpts,
+                    fpts_against: p.fpts_against,
+                    isLeaguesHidden: true,
+                    isPlayerHidden: false
+                })
+            } else {
+                ps[index].count++
+                if (!ps[index].leagues.includes(p.league)) {
+                    ps[index].leagues.push(p.league)
+                }
+                ps[index].wins = ps[index].wins + p.wins
+                ps[index].losses = ps[index].losses + p.losses
+                ps[index].ties = ps[index].ties + p.ties
+                ps[index].fpts = ps[index].fpts + p.fpts
+                ps[index].fpts_against = ps[index].fpts_against + p.fpts_against
+            }
+        })
+        return ps
+    }
+
+    const getPlayerShares = (players_owned, players_taken) => {
+        const po = findOccurrences(players_owned)
+        const pt = findOccurrences(players_taken)
+        let ap = Object.keys(allPlayers).filter(x => allPlayers[x].status === 'Active').map(player => {
+            const match_owned = po.find(x => x.id === player)
+            const leagues_owned = match_owned === undefined ? [] : match_owned.leagues
+            const match_taken = pt.find(x => x.id === player)
+            const leagues_taken = match_taken === undefined ? [] : match_taken.leagues
+            const leagues_available = leagues.filter(x => leagues_owned.find(y => y.league_id === x.league_id) === undefined &&
+                leagues_taken.find(y => y.league_id === x.league_id) === undefined)
+            return {
+                id: player,
+                position: ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[player].position) ? allPlayers[player].position : 'Other',
+                type: allPlayers[player].years_exp === 0 ? 'R' : 'V',
+                leagues_owned: leagues_owned,
+                leagues_taken: leagues_taken,
+                leagues_available: leagues_available,
+                count: match_owned === undefined ? 0 : match_owned.count,
+                wins: match_owned === undefined ? 0 : match_owned.wins,
+                losses: match_owned === undefined ? 0 : match_owned.losses,
+                ties: match_owned === undefined ? 0 : match_owned.ties,
+                fpts: match_owned === undefined ? 0 : match_owned.fpts,
+                fpts_against: match_owned === undefined ? 0 : match_owned.fpts_against,
+                isPlayerHidden: false,
+                isLeaguesHidden: true,
+            }
+        })
+        return ap
+    }
 
     const fetchData = async () => {
         setIsLoading_L(true)
@@ -50,6 +119,39 @@ const View = (props) => {
         })
         setTransactions(t.data)
         setIsLoading_T(false)
+
+        let playersOwned = l_updated.map(league => {
+            return league.rosters.filter(x => x.players !== null && x.owner_id === props.user.user_id).map(roster => {
+                return roster.players.map(player => {
+                    return {
+                        id: player,
+                        league: league,
+                        wins: league.record.wins,
+                        losses: league.record.losses,
+                        ties: league.record.ties,
+                        fpts: league.fpts,
+                        fpts_against: league.fpts_against
+                    }
+                })
+            })
+        }).flat(2)
+        let playersTaken = l_updated.map(league => {
+            return league.rosters.filter(x => x.players !== null && x.owner_id !== props.user.user_id).map(roster => {
+                return roster.players.map(player => {
+                    return {
+                        id: player,
+                        league: league,
+                        wins: league.record.wins,
+                        losses: league.record.losses,
+                        ties: league.record.ties,
+                        fpts: league.fpts,
+                        fpts_against: league.fpts_against
+                    }
+                })
+            })
+        }).flat(2)
+        const p = getPlayerShares(playersOwned, playersTaken)
+        setPlayers(p.filter(x => x.leagues_owned.length + x.leagues_taken.length > 0).sort((a, b) => b.count - a.count))
     }
 
     useEffect(() => {
@@ -202,6 +304,9 @@ const View = (props) => {
                         case `Week ${state.week}`:
                             proj = roster.starters.filter(x => x !== '0').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj_W(cur)), 0)
                             break;
+                        case 'Optimal':
+                            proj = getOptimalProjection(league.roster_positions, roster.players, { matchPlayer_Proj })
+                            break;
                     }
                     return {
                         ...roster,
@@ -265,9 +370,9 @@ const View = (props) => {
         return v
     }
 
-    const getProj = (roster) => {
+    const getProj = (roster, league) => {
         let p;
-        if (roster.players !== null) {
+        if (roster.players !== null && league.roster_positions !== undefined) {
             switch (group_rank) {
                 case 'Total':
                     p = roster.players.reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj(cur)), 0)
@@ -295,6 +400,9 @@ const View = (props) => {
                     break;
                 case `Week ${state.week}`:
                     p = roster.starters.reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj_W(cur)), 0)
+                    break;
+                case 'Optimal':
+                    p = getOptimalProjection(league.roster_positions, roster.players, { matchPlayer_Proj })
                     break;
                 default:
                     p = 0
@@ -421,11 +529,22 @@ const View = (props) => {
                 <PlayerShares
                     leagues={leagues.filter(x => x.isLeagueTypeHidden === false)}
                     user={user}
+                    getAge={getAge}
+                    getRank={getRank}
+                    getValue={getValue}
+                    group_age={group_age}
+                    group_rank={group_rank}
+                    group_value={group_value}
                     matchPlayer_DV={matchPlayer_DV}
                     matchPlayer_Proj={matchPlayer_Proj}
                     matchPlayer_Proj_W={matchPlayer_Proj_W}
                     matchPick={matchPick}
                     state={state}
+                    sendGroupAge={(data) => setGroup_age(data)}
+                    sendGroupRank={(data) => setGroup_rank(data)}
+                    sendGroupValue={(data) => setGroup_value(data)}
+                    findOccurrences={findOccurrences}
+                    players={players}
                 />
             : null
         }

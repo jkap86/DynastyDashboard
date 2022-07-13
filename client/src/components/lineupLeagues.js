@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import emoji from '../emoji.png';
 import Breakdown from "./breakdown";
+import { getOptimalProjection } from './optimalProjection';
 
 const LineupLeagues = (props) => {
     const [leagues, setLeagues] = useState([])

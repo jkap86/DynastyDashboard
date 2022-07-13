@@ -119,6 +119,7 @@ const Leagues = (props) => {
                         </th>
                         <th colSpan={2}>
                             <select value={props.group_rank} onChange={(e) => props.sendGroupRank(e.target.value)}>
+                                <option>Optimal</option>
                                 <option>Total</option>
                                 <option>Starters</option>
                                 <option>Bench</option>

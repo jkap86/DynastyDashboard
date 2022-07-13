@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import emoji from '../emoji.png';
 import Roster from "./roster";
-import allPlayers from '../allPlayers.json';
 
 const League = (props) => {
     const [rosters, setRosters] = useState([])
@@ -35,7 +34,7 @@ const League = (props) => {
                     r.sort((a, b) => a.settings.fpts_against - b.settings.fpts_against || a.settings.fpts_against_decimal - b.settings.fpts_against_decimal)
                 break;
             case 'Projection':
-                r = t ? r.sort((a, b) => props.getProj(a) - props.getProj(b)) : r.sort((a, b) => props.getProj(b) - props.getProj(a))
+                r = t ? r.sort((a, b) => props.getProj(a, props.league) - props.getProj(b, props.league)) : r.sort((a, b) => props.getProj(b, props.league) - props.getProj(a, props.league))
                 break;
             case 'Value':
                 r = t ? r.sort((a, b) => props.getValue(a) - props.getValue(b)) : r.sort((a, b) => props.getValue(b) - props.getValue(a))
@@ -85,6 +84,7 @@ const League = (props) => {
                     </th>
                     <th>
                         <select value={props.group_rank} onChange={(e) => props.sendGroupRank(e.target.value)}>
+                            <option>Optimal</option>
                             <option>Total</option>
                             <option>Starters</option>
                             <option>Bench</option>
@@ -139,7 +139,7 @@ const League = (props) => {
                                 {props.getAge(roster)}
                             </td>
                             <td>
-                                {props.getProj(roster).toLocaleString("en-US")}
+                                {props.getProj(roster, props.league).toLocaleString("en-US")}
                             </td>
                             <td>
                                 {props.getValue(roster).toLocaleString("en-US")}

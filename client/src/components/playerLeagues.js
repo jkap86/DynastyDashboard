@@ -4,9 +4,6 @@ import emoji from '../emoji.png';
 import allPlayers from '../allPlayers.json';
 
 const PlayerLeagues = (props) => {
-    const [group_value, setGroup_value] = useState('Total')
-    const [group_age, setGroup_age] = useState('Total')
-    const [group_rank, setGroup_rank] = useState('Total')
     const [sortBy, setSortBy] = useState('index')
     const [sortToggle, setSortToggle] = useState(false)
     const [tab, setTab] = useState('Owned')
@@ -18,146 +15,7 @@ const PlayerLeagues = (props) => {
         setLeagues_owned(props.leagues_owned.sort((a, b) => a.index - b.index))
         setLeagues_taken(props.leagues_taken.sort((a, b) => a.index - b.index))
         setLeagues_available(props.leagues_available.sort((a, b) => a.index - b.index))
-    }, [props.leagues_owned, props.leagues_taken, props.leagues_available])
-
-    const getValue = (league_id) => {
-        let l = tab === 'Owned' ? leagues_owned : tab === 'Taken' ? leagues_taken : leagues_available
-        l = l.find(x => x.league_id === league_id)
-        let roster = l.userRoster
-        let r;
-        if (roster.players !== null) {
-            switch (group_value) {
-                case 'Total':
-                    r = roster.players.reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0) +
-                        roster.draft_picks.reduce((acc, cur) => acc + parseInt(props.matchPick(cur.season, cur.round)), 0)
-                    break;
-                case 'Roster':
-                    r = roster.players.reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'Picks':
-                    r = roster.draft_picks.reduce((acc, cur) => acc + parseInt(props.matchPick(cur.season, cur.round)), 0)
-                    break;
-                case 'Starters':
-                    r = roster.starters.filter(x => x !== '0').reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'Bench':
-                    r = roster.players.filter(x => !roster.starters.includes(x)).reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'QB':
-                    r = roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'RB':
-                    r = roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'WR':
-                    r = roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'TE':
-                    r = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                default:
-                    r = 0
-                    break;
-            }
-        } else {
-            r = 0;
-        }
-        return r
-    }
-
-    const getAge = (league_id) => {
-        let l = tab === 'Owned' ? leagues_owned : tab === 'Taken' ? leagues_taken : leagues_available
-        l = l.find(x => x.league_id === league_id)
-        let roster = l.userRoster
-        let length;
-        let r;
-        if (roster.players !== null) {
-            switch (group_age) {
-                case 'Total':
-                    r = roster.players.filter(x => allPlayers[x].age !== undefined).reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(props.matchPlayer_DV(cur)), 0)
-                    length = roster.players.filter(x => allPlayers[x].age !== undefined).reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'Starters':
-                    r = roster.starters.filter(x => x !== '0' && allPlayers[x].age !== undefined).reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(props.matchPlayer_DV(cur)), 0)
-                    length = roster.starters.filter(x => x !== '0' && allPlayers[x].age !== undefined).reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'Bench':
-                    r = roster.players.filter(x => !roster.starters.includes(x) && allPlayers[x].age !== undefined).reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(props.matchPlayer_DV(cur)), 0)
-                    length = roster.players.filter(x => !roster.starters.includes(x) && allPlayers[x].age !== undefined).reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'QB':
-                    r = roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(props.matchPlayer_DV(cur)), 0)
-                    length = roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'RB':
-                    r = roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(props.matchPlayer_DV(cur)), 0)
-                    length = roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'WR':
-                    r = roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(props.matchPlayer_DV(cur)), 0)
-                    length = roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                case 'TE':
-                    r = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + allPlayers[cur].age * parseInt(props.matchPlayer_DV(cur)), 0)
-                    length = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseInt(props.matchPlayer_DV(cur)), 0)
-                    break;
-                default:
-                    r = 0
-                    length = 0
-                    break;
-            }
-        } else {
-            r = 0
-            length = 0
-        }
-        return length === 0 ? '-' : (r / length).toFixed(1)
-    }
-
-    const getRank = (league, rid) => {
-        let p;
-        if (league.userRoster.players !== null) {
-            let standings = league.rosters.map(roster => {
-                if (roster.players !== null) {
-                    let proj;
-                    switch (group_rank) {
-                        case 'Total':
-                            proj = roster.players.reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                            break;
-                        case 'Starters':
-                            proj = roster.starters.filter(x => x !== '0').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                            break;
-                        case 'Bench':
-                            proj = roster.players.filter(x => !roster.starters.includes(x)).reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                            break;
-                        case 'QB':
-                            proj = roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                            break;
-                        case 'RB':
-                            proj = roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                            break;
-                        case 'WR':
-                            proj = roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                            break;
-                        case 'TE':
-                            proj = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseFloat(props.matchPlayer_Proj(cur)), 0)
-                            break;
-                    }
-                    return {
-                        ...roster,
-                        proj: proj
-                    }
-                } else {
-                    p = '-'
-                }
-            }).sort((a, b) => b.proj - a.proj)
-            p = standings.findIndex(obj => {
-                return obj.roster_id === rid
-            }) + 1
-        } else {
-            p = '-'
-        }
-        return `${p} / ${league.rosters.length}`
-    }
+    }, [props])
 
     const sort = (sort_by) => {
         const t = sortToggle
@@ -184,10 +42,10 @@ const PlayerLeagues = (props) => {
                 l = t ? l.sort((a, b) => a.fpts_against - b.fpts_against) : l.sort((a, b) => b.fpts_against - a.fpts_against)
                 break;
             case 'Value':
-                l = t ? l.sort((a, b) => getValue(a.league_id) - getValue(b.league_id)) : l.sort((a, b) => getValue(b.league_id) - getValue(a.league_id))
+                l = t ? l.sort((a, b) => props.getValue(a.league_id) - props.getValue(b.league_id)) : l.sort((a, b) => props.getValue(b.league_id) - props.getValue(a.league_id))
                 break;
             case 'VWA':
-                l = t ? l.sort((a, b) => getAge(a.league_id) - getAge(b.league_id)) : l.sort((a, b) => getAge(b.league_id) - getAge(a.league_id))
+                l = t ? l.sort((a, b) => props.getAge(a.userRoster) - props.getAge(b.userRoster)) : l.sort((a, b) => props.getAge(b.userRoster) - props.getAge(a.userRoster))
                 break;
             default:
                 l = l.sort((a, b) => a.index - b.index)
@@ -238,7 +96,8 @@ const PlayerLeagues = (props) => {
                             <p onClick={() => sort('PF')}>PF</p> - <p onClick={() => sort('PA')}>PA</p>
                         </th>
                         <th>
-                            <select value={group_rank} onChange={(e) => setGroup_rank(e.target.value)}>
+                            <select value={props.group_rank} onChange={(e) => props.sendGroupRank(e.target.value)}>
+                                <option>Optimal</option>
                                 <option>Total</option>
                                 <option>Starters</option>
                                 <option>Bench</option>
@@ -250,7 +109,7 @@ const PlayerLeagues = (props) => {
                             ROS Rank
                         </th>
                         <th>
-                            <select value={group_value} onChange={(e) => setGroup_value(e.target.value)}>
+                            <select value={props.group_value} onChange={(e) => props.sendGroupValue(e.target.value)}>
                                 <option>Total</option>
                                 <option>Roster</option>
                                 <option>Picks</option>
@@ -264,7 +123,7 @@ const PlayerLeagues = (props) => {
                             <p onClick={() => sort('Value')}>Value</p>
                         </th>
                         <th>
-                            <select value={group_age} onChange={(e) => setGroup_age(e.target.value)}>
+                            <select value={props.group_age} onChange={(e) => props.sendGroupAge(e.target.value)}>
                                 <option>Total</option>
                                 <option>Starters</option>
                                 <option>Bench</option>
@@ -312,13 +171,13 @@ const PlayerLeagues = (props) => {
                                 </td>
                                 <td colSpan={2}>{league.fpts}-{league.fpts_against}</td>
                                 <td>
-                                    {getRank(league, league.userRoster.roster_id)}
+                                    {props.getRank(league)}
                                 </td>
                                 <td>
-                                    {getValue(league.league_id).toLocaleString("en-US")}
+                                    {props.getValue(league.userRoster).toLocaleString("en-US")}
                                 </td>
                                 <td>
-                                    {getAge(league.league_id)}
+                                    {props.getAge(league.userRoster)}
                                 </td>
                             </tr>
                             {league.isRostersHidden ? null :
@@ -349,7 +208,7 @@ const PlayerLeagues = (props) => {
                         <th colSpan={2}>Record</th>
                         <th colSpan={2}>FP</th>
                         <th>
-                            <select value={group_value} onChange={(e) => setGroup_value(e.target.value)}>
+                            <select value={props.group_value} onChange={(e) => props.sendGroupValue(e.target.value)}>
                                 <option>Total</option>
                                 <option>Roster</option>
                                 <option>Picks</option>
@@ -363,7 +222,7 @@ const PlayerLeagues = (props) => {
                             Value
                         </th>
                         <th>
-                            <select value={group_age} onChange={(e) => setGroup_age(e.target.value)}>
+                            <select value={props.group_age} onChange={(e) => props.sendGroupAge(e.target.value)}>
                                 <option>All</option>
                                 <option>Starters</option>
                                 <option>Bench</option>
@@ -412,10 +271,10 @@ const PlayerLeagues = (props) => {
                                 </td>
                                 <td colSpan={2}>{league.fpts} - {league.fpts_against}</td>
                                 <td>
-                                    {getValue(league.league_id).toLocaleString("en-US")}
+                                    {props.getValue(league.userRoster).toLocaleString("en-US")}
                                 </td>
                                 <td>
-                                    {getAge(league.league_id)}
+                                    {props.getAge(league.userRoster)}
                                 </td>
                             </tr>
                             {league.isRostersHidden ? null :
@@ -456,7 +315,7 @@ const PlayerLeagues = (props) => {
                         <th>PF</th>
                         <th>PA</th>
                         <th>
-                            <select value={group_value} onChange={(e) => setGroup_value(e.target.value)}>
+                            <select value={props.group_value} onChange={(e) => props.sendGroupValue(e.target.value)}>
                                 <option>Total</option>
                                 <option>Roster</option>
                                 <option>Picks</option>
@@ -470,7 +329,7 @@ const PlayerLeagues = (props) => {
                             Value
                         </th>
                         <th>
-                            <select value={group_age} onChange={(e) => setGroup_age(e.target.value)}>
+                            <select value={props.group_age} onChange={(e) => props.sendGroupAge(e.target.value)}>
                                 <option>All</option>
                                 <option>Starters</option>
                                 <option>Bench</option>
@@ -505,10 +364,10 @@ const PlayerLeagues = (props) => {
                                 <td>{league.fpts}</td>
                                 <td>{league.fpts_against}</td>
                                 <td>
-                                    {getValue(league.league_id).toLocaleString("en-US")}
+                                    {props.getValue(league.userRoster).toLocaleString("en-US")}
                                 </td>
                                 <td>
-                                    {getAge(league.league_id)}
+                                    {props.getAge(league.userRoster)}
                                 </td>
                             </tr>
                             {league.isRostersHidden || league.userRoster.players === null ? null :
