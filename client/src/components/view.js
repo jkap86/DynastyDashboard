@@ -154,7 +154,7 @@ const View = (props) => {
         }).flat(2)
         const p = getPlayerShares(playersOwned, playersTaken)
         setPlayers(p.filter(x => x.leagues_owned.length + x.leagues_taken.length > 0).sort((a, b) => b.count - a.count))
-    }, [props.user, filters])
+    }, [props.user, leagues, filters])
 
     useEffect(() => {
         setUser(props.user)
