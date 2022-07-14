@@ -100,24 +100,6 @@ const Leagues = (props) => {
                         <th colSpan={2}>Record</th>
                         <th colSpan={2}>FP</th>
                         <th colSpan={2}>
-                            <select value={props.group_age} onChange={(e) => props.sendGroupAge(e.target.value)}>
-                                <option>Total</option>
-                                <option>Starters</option>
-                                <option>Bench</option>
-                                <option>QB</option>
-                                <option>RB</option>
-                                <option>WR</option>
-                                <option>TE</option>
-                                <option>FLEX</option>
-                            </select>
-                            <div className="tooltip">
-                                <p className="clickable" onClick={() => sort('Age')}>VWAA</p>
-                                <span className="tooltiptext">
-                                    Value Weighted Avg Age
-                                </span>
-                            </div>
-                        </th>
-                        <th colSpan={2}>
                             <select value={props.group_rank} onChange={(e) => props.sendGroupRank(e.target.value)}>
                                 <option>Optimal</option>
                                 <option>Total</option>
@@ -178,9 +160,6 @@ const Leagues = (props) => {
                                     {league.fpts}-{league.fpts_against}
                                 </td>
                                 <td colSpan={2}>
-                                    {props.getAge(league.userRoster)}
-                                </td>
-                                <td colSpan={2}>
                                     {props.getRank(league)}
                                 </td>
                                 <td colSpan={2}>
@@ -189,7 +168,7 @@ const Leagues = (props) => {
                             </tr>
                             {league.isRostersHidden ? null :
                                 <tr>
-                                    <td colSpan={14}>
+                                    <td colSpan={12}>
                                         <League
                                             league={league}
                                             group_age={props.group_age}

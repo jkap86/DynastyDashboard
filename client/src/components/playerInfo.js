@@ -161,6 +161,31 @@ const PlayerInfo = (props) => {
 
     }
 
+    const sort = (sort_by) => {
+        let p = tab === 'Projections' ? projections :
+            tab === 'Week Projections' ? projections_weekly :
+                dynastyvalues
+        switch (sort_by) {
+            case 'User':
+                p = p.sort((a, b) => b.updated_value - a.updated_value)
+                break;
+            case 'Default':
+                p = p.sort((a, b) => b.value - a.value)
+                break;
+        }
+        switch (tab) {
+            case 'Projections':
+                setProjections([...p])
+                break;
+            case 'Week Projections':
+                setProjections_weekly([...p])
+                break;
+            case 'Dynasty Values':
+                setDynastyvalues([...p])
+                break;
+        }
+    }
+
     const players = tab === 'Projections' ? projections :
         tab === 'Week Projections' ? projections_weekly :
             dynastyvalues
@@ -221,8 +246,8 @@ const PlayerInfo = (props) => {
                             <th colSpan={2}>Player</th>
                             <th>Position</th>
                             <th>Team</th>
-                            <th>{tab !== 'Dynasty Values' ? 'FantasyPos' : 'KTC'}</th>
-                            <th>User</th>
+                            <th className="clickable" onClick={() => sort('Default')}>{tab !== 'Dynasty Values' ? 'FantasyPos' : 'KTC'}</th>
+                            <th className="clickable" onClick={() => sort('User')}>User</th>
                         </tr>
                     </tbody>
                     <tbody className="slide_up">
