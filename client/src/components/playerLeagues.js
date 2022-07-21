@@ -95,7 +95,7 @@ const PlayerLeagues = (props) => {
                         <th colSpan={2}>
                             <p onClick={() => sort('PF')}>PF</p> - <p onClick={() => sort('PA')}>PA</p>
                         </th>
-                        <th>
+                        <th colSpan={2}>
                             <select value={props.group_rank} onChange={(e) => props.sendGroupRank(e.target.value)}>
                                 <option>Optimal</option>
                                 <option>Total</option>
@@ -108,7 +108,7 @@ const PlayerLeagues = (props) => {
                             </select>
                             ROS Rank
                         </th>
-                        <th>
+                        <th colSpan={2}>
                             <select value={props.group_value} onChange={(e) => props.sendGroupValue(e.target.value)}>
                                 <option>Total</option>
                                 <option>Roster</option>
@@ -121,23 +121,6 @@ const PlayerLeagues = (props) => {
                                 <option>TE</option>
                             </select>
                             <p onClick={() => sort('Value')}>Value</p>
-                        </th>
-                        <th>
-                            <select value={props.group_age} onChange={(e) => props.sendGroupAge(e.target.value)}>
-                                <option>Total</option>
-                                <option>Starters</option>
-                                <option>Bench</option>
-                                <option>QB</option>
-                                <option>RB</option>
-                                <option>WR</option>
-                                <option>TE</option>
-                            </select>
-                            <div className="tooltip">
-                                <p onClick={() => sort('VWA')}>VWAA</p>
-                                <span className="tooltiptext">
-                                    Value Weighted Avg Age
-                                </span>
-                            </div>
                         </th>
                     </tr>
                 </tbody>
@@ -170,19 +153,16 @@ const PlayerLeagues = (props) => {
                                     <em>{league.record.winpct.toFixed(4)}</em>
                                 </td>
                                 <td colSpan={2}>{league.fpts}-{league.fpts_against}</td>
-                                <td>
+                                <td colSpan={2}>
                                     {props.getRank(league)}
                                 </td>
-                                <td>
+                                <td colSpan={2}>
                                     {props.getValue(league.userRoster).toLocaleString("en-US")}
-                                </td>
-                                <td>
-                                    {props.getAge(league.userRoster)}
                                 </td>
                             </tr>
                             {league.isRostersHidden ? null :
                                 <tr className="tertiary">
-                                    <td colSpan={11}>
+                                    <td colSpan={12}>
                                         <Roster
                                             roster={league.userRoster}
                                             matchPick={props.matchPick}

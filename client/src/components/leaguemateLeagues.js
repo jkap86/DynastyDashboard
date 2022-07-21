@@ -114,69 +114,27 @@ const LeaguemateLeagues = (props) => {
                     <th colSpan={2}>W-L</th>
                     <th colSpan={2}>FP</th>
                     <th colSpan={2}>
-                        <select value={group_value} onChange={(e) => setGroup_value(e.target.value)}>
+                        <select value={props.group_rank} onChange={(e) => props.sendGroupRank(e.target.value)}>
+                            <option>Optimal</option>
                             <option>Total</option>
-                            <option>Roster</option>
-                            <option>Picks</option>
                             <option>Starters</option>
                             <option>Bench</option>
                             <option>QB</option>
                             <option>RB</option>
                             <option>WR</option>
                             <option>TE</option>
+                            <option>FLEX</option>
+                            <option>Week {props.state.week}</option>
                         </select>
                         Value
-                    </th>
-                    <th>
-                        <select value={group_age} onChange={(e) => setGroup_age(e.target.value)}>
-                            <option>Total</option>
-                            <option>Starters</option>
-                            <option>Bench</option>
-                            <option>QB</option>
-                            <option>RB</option>
-                            <option>WR</option>
-                            <option>TE</option>
-                        </select>
-                        <div className="tooltip">
-                            <p>VWAA</p>
-                            <span className="tooltiptext">
-                                Value Weighted Avg Age
-                            </span>
-                        </div>
                     </th>
                     <th colSpan={4}>League</th>
                     <th colSpan={2}>W-L</th>
                     <th colSpan={2}>FP</th>
                     <th colSpan={2}>
-                        <select value={group_value} onChange={(e) => setGroup_value(e.target.value)}>
-                            <option>Total</option>
-                            <option>Roster</option>
-                            <option>Picks</option>
-                            <option>Starters</option>
-                            <option>Bench</option>
-                            <option>QB</option>
-                            <option>RB</option>
-                            <option>WR</option>
-                            <option>TE</option>
-                        </select>
-                        <p>Value</p>
-                    </th>
-                    <th>
-                        <select value={group_age} onChange={(e) => setGroup_age(e.target.value)}>
-                            <option>All</option>
-                            <option>Starters</option>
-                            <option>Bench</option>
-                            <option>QB</option>
-                            <option>RB</option>
-                            <option>WR</option>
-                            <option>TE</option>
-                        </select>
-                        <div className="tooltip">
-                            <p>VWAA</p>
-                            <span className="tooltiptext">
-                                Value Weighted Avg Age
-                            </span>
-                        </div>
+
+
+
                     </th>
                 </tr>
             </tbody>

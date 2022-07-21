@@ -52,8 +52,8 @@ const getLeagues = async (username, season, week) => {
             await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/matchups/${Math.max(week, 1)}`).catch((err) => console.log(err)),
             await axios.get(`https://api.sleeper.app/v1/league/${league.league_id}/traded_picks`).catch((err) => console.log(err))
         ])
-        rosters.data = rosters.data?.map(roster => {
-            const roster_user = users.data.find(x => x.user_id === roster.owner_id)
+        rosters.data = rosters?.data.map(roster => {
+            const roster_user = users?.data.find(x => x.user_id === roster.owner_id)
             const wins = week < 1 ? roster.metadata === null || roster.metadata.record === undefined || roster.metadata.record.match(/W/g) === null ?
                 0 : roster.metadata.record.match(/W/g).length
                 : roster.settings.wins
@@ -80,8 +80,8 @@ const getLeagues = async (username, season, week) => {
         const userRoster = rosters.data?.find(x => x.owner_id === user.data.user_id || (x.co_owners !== null && x.co_owners !== undefined && x.co_owners.includes(user.data.user_id)))
 
         if (userRoster !== undefined) {
-            const matchup = matchups.data.find(x => x.roster_id === userRoster.roster_id)
-            const matchup_opponent = matchups.data.find(x => x.matchup_id === matchup.matchup_id && x.roster_id !== matchup.roster_id)
+            const matchup = matchups?.data.find(x => x.roster_id === userRoster.roster_id)
+            const matchup_opponent = matchups?.data.find(x => x.matchup_id === matchup.matchup_id && x.roster_id !== matchup.roster_id)
             const opponent = matchup_opponent === undefined ? 'orphan' : rosters.data.find(x => x.roster_id === matchup_opponent.roster_id)
             const wins = week < 1 ? userRoster.metadata === null || userRoster.metadata.record === undefined || userRoster.metadata.record.match(/W/g) === null ?
                 0 : userRoster.metadata.record.match(/W/g).length
@@ -108,7 +108,7 @@ const getLeagues = async (username, season, week) => {
                 },
                 fpts: userRoster === {} ? 0 : parseFloat(`${userRoster.settings.fpts}.${userRoster.settings.fpts_decimal === undefined ? 0 : userRoster.settings.fpts_decimal}`),
                 fpts_against: userRoster === {} ? 0 : parseFloat(`${userRoster.settings.fpts_against === undefined ? 0 : userRoster.settings.fpts_against}.${userRoster.settings.fpts_against_decimal === undefined ? 0 : userRoster.settings.fpts_against_decimal}`),
-                matchups: matchups.data,
+                matchups: matchups?.data,
                 matchup: matchup,
                 matchup_opponent: matchup_opponent,
                 opponent: opponent === undefined ? 'orphan' : opponent,

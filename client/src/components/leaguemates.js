@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Search from "./search";
 import emoji from '../emoji.png';
 import LeaguemateLeagues from "./leaguemateLeagues";
@@ -6,6 +6,7 @@ import LeaguemateLeagues from "./leaguemateLeagues";
 const Leaguemates = (props) => {
     const [leaguemates, setLeaguemates] = useState([])
     const [page, SetPage] = useState(1)
+    const lmRef = useRef(false)
 
     useEffect(() => {
         const getLeaguemates = (leagues) => {
@@ -167,6 +168,9 @@ const Leaguemates = (props) => {
                                             matchPlayer_Proj_W={props.matchPlayer_Proj_W}
                                             matchPick={props.matchPick}
                                             state={props.state}
+                                            getRank={props.getRank}
+                                            group_rank={props.group_rank}
+                                            sendGroupRank={(data) => props.sendGroupRank(data)}
                                         />
                                     </td>
                                 </tr>

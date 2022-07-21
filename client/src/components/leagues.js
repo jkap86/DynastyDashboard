@@ -8,8 +8,10 @@ const Leagues = (props) => {
     const [sortBy, setSortBy] = useState('index')
     const [sortToggle, setSortToggle] = useState(false)
 
+
     useEffect(() => {
         setLeagues([...props.leagues.sort((a, b) => a.index - b.index)])
+
     }, [props])
 
     const showRosters = (league_id) => {
@@ -163,7 +165,7 @@ const Leagues = (props) => {
                                     {props.getRank(league)}
                                 </td>
                                 <td colSpan={2}>
-                                    {props.getValue(league.userRoster).toLocaleString("en-US")}
+                                    {props.getRank_Value(league)}
                                 </td>
                             </tr>
                             {league.isRostersHidden ? null :

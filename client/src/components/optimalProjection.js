@@ -1,6 +1,6 @@
 import allPlayers from '../allPlayers.json';
 
-export const getOptimalProjection = (roster_slots, players, { matchPlayer_Proj }) => {
+export const getOptimalLineup = (roster_slots, players, { matchPlayer_Proj }) => {
     const position_map = {
         'QB': ['QB'],
         'RB': ['RB', 'FB'],
@@ -32,5 +32,5 @@ export const getOptimalProjection = (roster_slots, players, { matchPlayer_Proj }
 
     })
 
-    return projection.reduce((acc, cur) => acc + cur.proj, 0)
+    return projection
 }

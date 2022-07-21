@@ -8,7 +8,7 @@ import Leaguemates from "./leaguemates";
 import Transactions from "./transactions";
 import emoji from '../emoji.png';
 import allPlayers from '../allPlayers.json';
-import { getOptimalProjection } from './optimalProjection';
+import { getOptimalLineup } from './optimalProjection';
 
 const View = (props) => {
     const [state, setState] = useState({})
@@ -272,6 +272,62 @@ const View = (props) => {
         return length === 0 ? '-' : (a / length).toFixed(1)
     }
 
+    const getRank_Value = (league, roster) => {
+        let v;
+        if (roster ? roster.players !== null : league.userRoster.players !== null) {
+            let standings = league.rosters.map(roster => {
+                if (roster.players !== null) {
+                    let value;
+                    switch (group_value) {
+                        case 'Total':
+                            value = roster.players.reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0) +
+                                roster.draft_picks.reduce((acc, cur) => acc + parseInt(matchPick(cur.season, cur.round)), 0)
+                            break;
+                        case 'Roster':
+                            value = roster.players.reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0)
+                            break;
+                        case 'Picks':
+                            value = roster.draft_picks.reduce((acc, cur) => acc + parseInt(matchPick(cur.season, cur.round)), 0);
+                            break;
+                        case 'Starters':
+                            value = roster.starters.reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0);
+                            break;
+                        case 'Bench':
+                            value = roster.players.filter(x => !roster.starters.includes(x)).reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0);
+                            break;
+                        case 'QB':
+                            value = roster.players.filter(x => allPlayers[x].position === 'QB').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0);
+                            break;
+                        case 'RB':
+                            value = roster.players.filter(x => allPlayers[x].position === 'RB').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0);
+                            break;
+                        case 'WR':
+                            value = roster.players.filter(x => allPlayers[x].position === 'WR').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0);
+                            break;
+                        case 'TE':
+                            value = roster.players.filter(x => allPlayers[x].position === 'TE').reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0);
+                            break;
+                        case 'FLEX':
+                            value = roster.players.filter(x => ['RB', 'WR', 'TE'].includes(allPlayers[x].position)).reduce((acc, cur) => acc + parseInt(matchPlayer_DV(cur)), 0);
+                            break;
+                    }
+                    return {
+                        ...roster,
+                        value: value
+                    }
+                } else {
+                    v = '-'
+                }
+            }).sort((a, b) => b.value - a.value)
+            v = standings.findIndex(obj => {
+                return obj.roster_id === league.userRoster.roster_id
+            }) + 1
+        } else {
+            v = '-'
+        }
+        return `${v} / ${league.rosters.length}`
+    }
+
     const getRank = (league, roster) => {
         let p;
         if (roster ? roster.players !== null : league.userRoster.players !== null) {
@@ -307,7 +363,7 @@ const View = (props) => {
                             proj = roster.starters.filter(x => x !== '0').reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj_W(cur)), 0)
                             break;
                         case 'Optimal':
-                            proj = getOptimalProjection(league.roster_positions, roster.players, { matchPlayer_Proj })
+                            proj = getOptimalLineup(league.roster_positions, roster.players, { matchPlayer_Proj }).reduce((acc, cur) => acc + cur.proj, 0)
                             break;
                     }
                     return {
@@ -404,7 +460,7 @@ const View = (props) => {
                     p = roster.starters.reduce((acc, cur) => acc + parseFloat(matchPlayer_Proj_W(cur)), 0)
                     break;
                 case 'Optimal':
-                    p = getOptimalProjection(league.roster_positions, roster.players, { matchPlayer_Proj })
+                    p = getOptimalLineup(league.roster_positions, roster.players, { matchPlayer_Proj }).reduce((acc, cur) => acc + cur.proj, 0)
                     break;
                 default:
                     p = 0
@@ -503,8 +559,9 @@ const View = (props) => {
             />
         </div>
 
-        {activeTab === 'Leagues' ?
-            isLoading_L ? <h1>Loading...</h1> :
+
+        <div hidden={activeTab === 'Leagues' ? false : true}>
+            {isLoading_L ? <h1>Loading...</h1> :
                 <Leagues
                     leagues={leagues.filter(x => x.isLeagueTypeHidden === false)}
                     matchPlayer_DV={matchPlayer_DV}
@@ -512,6 +569,7 @@ const View = (props) => {
                     matchPlayer_Proj={matchPlayer_Proj}
                     matchPlayer_Proj_W={matchPlayer_Proj_W}
                     getAge={getAge}
+                    getRank_Value={getRank_Value}
                     getRank={getRank}
                     getValue={getValue}
                     getProj={getProj}
@@ -523,11 +581,12 @@ const View = (props) => {
                     sendGroupRank={(data) => setGroup_rank(data)}
                     sendGroupValue={(data) => setGroup_value(data)}
                 />
-            : null
-        }
+            }
+        </div>
 
-        {activeTab === 'Players' ?
-            isLoading_L ? <h1>Loading...</h1> :
+
+        <div hidden={activeTab === 'Players' ? false : true}>
+            {isLoading_L ? <h1>Loading...</h1> :
                 <PlayerShares
                     leagues={leagues.filter(x => x.isLeagueTypeHidden === false)}
                     user={user}
@@ -548,11 +607,11 @@ const View = (props) => {
                     findOccurrences={findOccurrences}
                     players={players}
                 />
-            : null
-        }
+            }
+        </div>
 
-        {activeTab === 'Leaguemates' ?
-            isLoading_L ? <h1>Loading...</h1> :
+        <div hidden={activeTab === 'Leaguemates' ? false : true}>
+            {isLoading_L ? <h1>Loading...</h1> :
                 <Leaguemates
                     leagues={leagues.filter((x) => x.isLeagueTypeHidden === false)}
                     user={user}
@@ -561,12 +620,16 @@ const View = (props) => {
                     matchPlayer_Proj_W={matchPlayer_Proj_W}
                     matchPick={matchPick}
                     state={state}
+                    getRank={getRank}
+                    group_rank={group_rank}
+                    sendGroupRank={(data) => setGroup_rank(data)}
                 />
-            : null
-        }
+            }
+        </div>
 
-        {activeTab === 'Transactions' ?
-            isLoading_T ? <h1>Loading...</h1> :
+
+        <div hidden={activeTab === 'Transactions' ? false : true}>
+            {isLoading_T ? <h1>Loading...</h1> :
                 <Transactions
                     transactions={transactions.filter(x => leagues.find(y => y.league_id === x.league_id) !== undefined &&
                         leagues.find(y => y.league_id === x.league_id).isLeagueTypeHidden === false)}
@@ -577,8 +640,8 @@ const View = (props) => {
                     matchPlayer_Proj_W={matchPlayer_Proj_W}
                     state={state}
                 />
-            : null
-        }
+            }
+        </div>
     </>
 }
 export default View;
