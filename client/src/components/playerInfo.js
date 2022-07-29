@@ -2,16 +2,37 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Search from "./search";
 import player_default from '../player_default.png';
-import allPlayers from '../allPlayers.json'
+import allPlayers from '../allPlayers.json';
+import { read, utils } from 'xlsx';
 
 const PlayerInfo = (props) => {
     const [isLoading, setIsLoading] = useState(false)
     const [projections, setProjections] = useState([])
     const [projections_weekly, setProjections_weekly] = useState([])
     const [dynastyvalues, setDynastyvalues] = useState([])
+    const [file, setFile] = useState({ p: false, pw: false, dv: false })
     const [tab, setTab] = useState('Projections')
     const [filters, setFilters] = useState({ positions: [], types: [] })
     const [page, SetPage] = useState(1)
+
+    const matchPlayers = (list) => {
+        const l = Object.keys(allPlayers).filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x].position)).map(player => {
+            const match = list.find(x => x.searchName === allPlayers[player].search_full_name && (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2)))
+            const match2 = list.find(x => allPlayers[player].search_full_name !== undefined && (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2)) &&
+                x.searchName.slice(-5, -2) === allPlayers[player].search_full_name.slice(-5, -2) &&
+                x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3))
+            return {
+                id: player,
+                name: allPlayers[player] === undefined ? match !== undefined ? match.name : match2 !== undefined ? match2.searchName : '' : allPlayers[player].full_name,
+                searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
+                position: allPlayers[player] === undefined ? 'Pick' : allPlayers[player].position,
+                value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
+                updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0,
+                isPlayerHidden: false
+            }
+        })
+        return l
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,57 +42,15 @@ const PlayerInfo = (props) => {
                 await axios.get('/projections_weekly'),
                 await axios.get('/dynastyvalues')
             ])
-            let p = Object.keys(allPlayers).filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x].position)).map(player => {
-                const match = proj.data.find(x => x.searchName === allPlayers[player].search_full_name && (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2)))
-                const match2 = proj.data.find(x => allPlayers[player].search_full_name !== undefined && (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2)) &&
-                    x.searchName.slice(-5, -2) === allPlayers[player].search_full_name.slice(-5, -2) &&
-                    x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3))
-                return {
-                    id: player,
-                    name: allPlayers[player] === undefined ? match !== undefined ? match.name : match2 !== undefined ? match2.searchName : '' : allPlayers[player].full_name,
-                    searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
-                    position: allPlayers[player] === undefined ? 'Pick' : allPlayers[player].position,
-                    value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
-                    updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0,
-                    isPlayerHidden: false
-                }
-            })
+            let p = matchPlayers(proj.data)
 
             setProjections(p.sort((a, b) => parseFloat(b.value) - parseFloat(a.value)))
 
-            let pw = Object.keys(allPlayers).filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x].position)).map(player => {
-                const match = proj_weekly.data.find(x => x.searchName === allPlayers[player].search_full_name && (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2)))
-                const match2 = proj_weekly.data.find(x => allPlayers[player].search_full_name !== undefined && (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2)) &&
-                    x.searchName.slice(-5, -2) === allPlayers[player].search_full_name.slice(-5, -2) &&
-                    x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3))
-                return {
-                    id: player,
-                    name: allPlayers[player] === undefined ? match !== undefined ? match.name : match2 !== undefined ? match2.searchName : '' : allPlayers[player].full_name,
-                    searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
-                    position: allPlayers[player] === undefined ? 'Pick' : allPlayers[player].position,
-                    value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
-                    updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0,
-                    isPlayerHidden: false
-                }
-            })
+            let pw = matchPlayers(proj_weekly.data)
 
             setProjections_weekly(pw.sort((a, b) => parseFloat(b.value) - parseFloat(a.value)))
 
-            let d = Object.keys(allPlayers).filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x].position)).map(player => {
-                const match = dv.data.find(x => x.searchName === allPlayers[player].search_full_name && ((allPlayers[player].team === null && x.team === 'FA') || (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2))))
-                const match2 = dv.data.find(x => allPlayers[player].search_full_name !== undefined && ((allPlayers[player].team === null && x.team === 'FA') || (allPlayers[player].team !== null && allPlayers[player].team.slice(0, 2) === x.team.slice(0, 2))) &&
-                    x.searchName.slice(-5, -2) === allPlayers[player].search_full_name.slice(-5, -2) &&
-                    x.searchName.slice(0, 3) === allPlayers[player].search_full_name.slice(0, 3))
-                return {
-                    id: player,
-                    name: allPlayers[player] === undefined ? match !== undefined ? match.name : match2 !== undefined ? match2.searchName : '' : allPlayers[player].full_name,
-                    searchName: match !== undefined ? match.searchName : match2 !== undefined ? match2.searchName : '',
-                    position: allPlayers[player] === undefined ? 'Pick' : allPlayers[player].position,
-                    value: match !== undefined ? match.value : match2 !== undefined ? match2.value : 0,
-                    updated_value: match !== undefined ? match.updated_value : match2 !== undefined ? match2.updated_value : 0,
-                    isPlayerHidden: false
-                }
-            })
+            let d = matchPlayers(dv.data)
             d = [...d, ...dv.data.filter(x => x.position === 'PI')].flat()
 
             setDynastyvalues(d.sort((a, b) => parseInt(b.value) - parseInt(a.value)))
@@ -186,9 +165,70 @@ const PlayerInfo = (props) => {
         }
     }
 
-    const players = tab === 'Projections' ? projections :
-        tab === 'Week Projections' ? projections_weekly :
-            dynastyvalues
+    const readFile = (e) => {
+        if (e.target.files) {
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                const data = e.target.result
+                const workbook = read(data, { type: 'array' })
+                const sheetName = workbook.SheetNames[0]
+                const worksheet = workbook.Sheets[sheetName]
+                let json = utils.sheet_to_json(worksheet)
+                json = json.map(player => {
+                    const name = player.Name
+                    const searchName = name.trim().replace('Jr.', '').replace('III', '').replace('II', '').replace('IV', '').replace(/[^0-9a-z]/gi, '').toLowerCase()
+                    const team = player.Team
+                    const value = player.Value
+                    return {
+                        name: name,
+                        searchName: searchName,
+                        team: team,
+                        value: value,
+                        updated_value: value
+                    }
+                })
+                console.log(json)
+                const upload = matchPlayers(json).sort((a, b) => b.value - a.value)
+                switch (tab) {
+                    case 'Projections':
+                        setFile({
+                            ...file,
+                            p: upload
+                        })
+                        props.sendProjections(upload);
+                        break;
+                    case 'Week Projections':
+                        setFile({
+                            ...file,
+                            pw: upload
+                        })
+                        props.sendProjections_weekly(upload)
+                        break;
+                    case 'Dynasty Values':
+                        setFile({
+                            ...file,
+                            dv: upload
+                        })
+                        props.sendDV(upload)
+                        break;
+                }
+            }
+            reader.readAsArrayBuffer(e.target.files[0])
+        }
+    }
+
+    let players;
+    switch (tab) {
+        case 'Projections':
+            players = file.p ? file.p : projections;
+            break;
+        case 'Week Projections':
+            players = file.pw ? file.pw : projections_weekly;
+            break;
+        case 'Dynasty Values':
+            players = file.dv ? file.dv : dynastyvalues;
+            break;
+    }
 
     return isLoading ? <h1>Loading...</h1> :
         <>
@@ -197,6 +237,7 @@ const PlayerInfo = (props) => {
                 <button className={tab === 'Week Projections' ? 'active clickable' : 'clickable'} onClick={() => setTab('Week Projections')}>Week Projections</button>
                 <button className={tab === 'Dynasty Values' ? 'active clickable' : 'clickable'} onClick={() => setTab('Dynasty Values')}>Dynasty Values</button>
             </div>
+
             <div className="search_wrapper">
                 <div className="checkboxes">
                     <label className="script">

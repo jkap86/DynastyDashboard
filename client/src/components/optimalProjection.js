@@ -15,7 +15,7 @@ export const getOptimalLineup = (roster_slots, players, { matchPlayer_Proj }) =>
     let players_proj = players.map(player => {
         return {
             id: player,
-            position: allPlayers[player].position,
+            position: allPlayers[player]?.position,
             proj: parseFloat(matchPlayer_Proj(player))
         }
     })
