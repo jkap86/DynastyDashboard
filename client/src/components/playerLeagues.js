@@ -238,10 +238,10 @@ const PlayerLeagues = (props) => {
                                         style={{ animation: `rotation ${Math.random() * 10 + 2}s infinite linear` }}
                                         className="thumbnail"
                                         alt="avatar"
-                                        src={league.rosters.find(x => x.players.includes(props.player)).avatar === null ? emoji : `https://sleepercdn.com/avatars/${league.rosters.find(x => x.players.includes(props.player)).avatar}`}
+                                        src={league.rosters.find(x => x.players !== null && x.players.includes(props.player)).avatar === null ? emoji : `https://sleepercdn.com/avatars/${league.rosters.find(x => x.players !== null && x.players.includes(props.player)).avatar}`}
                                     />
                                 </td>
-                                <td colSpan={2} className="left">{league.rosters.find(x => x.players.includes(props.player)).username}</td>
+                                <td colSpan={2} className="left">{league.rosters.find(x => x.players !== null && x.players.includes(props.player)).username}</td>
                                 <td colSpan={2}>
                                     <p className="record">
                                         {league.record.wins}-{league.record.losses}{league.record.ties === 0 ? null : `-${league.record.ties}`}
@@ -261,7 +261,7 @@ const PlayerLeagues = (props) => {
                                 <tr className="tertiary">
                                     <td colSpan={6} className="top">
                                         <Roster
-                                            roster={league.rosters.find(x => x.players.includes(props.player))}
+                                            roster={league.rosters.find(x => x.players !== null && x.players.includes(props.player))}
                                             matchPick={props.matchPick}
                                             matchPlayer_DV={props.matchPlayer_DV}
                                             matchPlayer_Proj={props.matchPlayer_Proj}
