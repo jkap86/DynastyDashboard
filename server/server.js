@@ -10,7 +10,7 @@ const projections = require('./workers/workerProjections')
 const projections_weekly = require('./workers/workerProjections_Weekly')
 const dv = require('./workers/workerDV')
 const leagues = require('./workers/workerLeagues')
-const transactions = require('./workers/workerTransactions')
+const { Worker, isMainThread } = require('worker_threads');
 
 app.use(compression())
 app.use(cors());
@@ -48,9 +48,25 @@ app.get('/projections_weekly', projections_weekly)
 
 app.get('/leagues', leagues)
 
-app.get('/transactions', transactions)
+app.get('/transactions', async (req, res, next) => {
+	if (isMainThread) {
+		const username = req.query.username
+		const state = await axios.get(`https://api.sleeper.app/v1/state/nfl`, { timeout: 3000 })
+		const season = state.data.league_season
+		const worker = new Worker('./workerTransactions.js', {
+			workerData: {
+				username: username,
+				season: season
+			}
+		});
+		worker.on('message', result => {
+			res.send(result)
+		})
+	}
 
-app.get('*', (req, res) => {
+})
+
+app.get('*', async (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/build/index.html'));
 })
 
